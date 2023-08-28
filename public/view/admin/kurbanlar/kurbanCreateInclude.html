@@ -1,0 +1,182 @@
+
+<form method="POST" action="/{{routerName}}/store" accept-charset="UTF-8" class="form-control1" id="{{RootName}}-store" enctype="multipart/form-data">
+    <input name="_csrf" type="hidden" value="{{ csrf }}">
+    <div class="row">
+        <div class="col-md-6">
+            <div class="row">
+                <div class="col-md-12">
+                    <div class="card">
+                        <div class="card-header">
+                            <strong>{% if title %} {{ title }} -  {% else %} STNC OTOMASYON SİSTEMi
+                                {% endif %}</strong>
+                            <small>Form</small>
+                        </div>
+
+
+                        <div class="card-body">
+
+           
+                            <div id="gr-Kisi1" class="form-group gr-Kisi1">
+                                <label for="Kisi1">Adı Soyadı</label>
+        
+                                <select class="selectpicker1 with-ajax form-control {{err.Kisi1_valid}}" id="Kisi1" name="Kisi1" value="{{post.KisiID}}" data-live-search="true">
+                                            {% if kisiBilgileri %}
+                                               <option selected value="{{kisiBilgileri.ID}}"> {{kisiBilgileri.AdSoyad}} </option>
+                                            {% endif %}
+                                </select> 
+                                   {% if err.KisiID_error %}
+                                       <div class="invalid-feedback" style="display:block">Lütfen Kişi seçiniz veya kişi oluşturunuz</div>
+                                   {% endif %} 
+                            </div>
+        
+        
+
+                            <div class="form-group">
+                                <label id="telefon" for="Telefon">Telefon</label><small></small>
+                            </div>
+
+
+
+                            <!-- <div id="gr-Kisi2" class="form-group gr-Kisi2">
+                                <label for="ReferansKisi1">Referans Kisi 1 {{referansData1.AdSoyad}} </label>
+        
+                                <select class="selectpicker2 with-ajax form-control {{err.ReferansKisi1_valid}}" id="ReferansKisi1" name="ReferansKisi1" value="{{post.ReferansKisi1}}" data-live-search="true">
+                                            {% if referansData1 %}
+                                               <option selected value="{{referansData1.ID}}"> {{referansData1.AdSoyad}} </option>
+                                            {% endif %}
+                                </select> 
+                                   {% if err.Kisi1_error %}
+                                       <div class="invalid-feedback" style="display:block">{{err.ReferansKisi1}}</div>
+                                   {% endif %}
+                            </div>
+         -->
+        
+                  
+        
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="col-md-3">
+            <div class="row">
+                <div class="col-md-12">
+                    <div class="card">
+                        <div class="card-header">
+                            <strong>Diğer Bilgiler</strong>
+                        </div>
+
+                        <div class="card-body">
+
+                            <div class="form-group">
+                                <label for="VekaletDurumu">Vekalet Durumu</label>
+                                <select class="form-control" name="VekaletDurumu" id="VekaletDurumu">
+                                    <option {%if post.VekaletDurumu==1 %} selected {% endif %} value="1">Alınmadı</option>
+                                    <option {%if post.VekaletDurumu==2 %} selected {% endif %} value="2">Alındı</option>
+                                </select>
+                            </div>
+
+
+                            <div class="form-group">
+                                <label for="KurbanTuru">Kurban Türü</label>
+                                <select class="form-control" name="KurbanTuru" id="KurbanTuru">
+                                    <option {%if  post.KurbanTuru==8 %} selected {% endif %}  value="8">KURBAN BAYRAMI [Küçükbaş]</option>    
+                                    <option {%if  post.KurbanTuru==5 %} selected {% endif %}  value="5">BAĞIŞ/HAYIR</option> 
+                                    <option {%if  post.KurbanTuru==1 %} selected {% endif %}  value="1">ADAK</option>
+                                    <option {%if  post.KurbanTuru==2 %} selected {% endif %}  value="2">AKİKA</option>
+                                    <option {%if  post.KurbanTuru==3 %} selected {% endif %}  value="3">ŞÜKÜR</option>
+                                    <option {%if  post.KurbanTuru==4 %} selected {% endif %}  value="4">SAHİBİNİN NİYETİNE</option>
+                                    <option {%if  post.KurbanTuru==6 %} selected {% endif %}  value="6">NAFİLE</option>
+                                    <option {%if  post.KurbanTuru==7 %} selected {% endif %}  value="7">ŞİFA</option>
+                                </select>
+                            </div>
+
+                            <div class="form-group">
+                                <label for="Agirlik">Agirlik / Düşen Kilo </label><small><code> **</code></small>
+                                <input class="form-control {{err.Agirlik_valid}}" id="Agirlik" name="Agirlik" value="{{post.Agirlik}}" type="text" placeholder="Agirlik"> {% if err.Agirlik_error %}
+                                <div class="invalid-feedback" style="display:block">{{err.Agirlik}}</div>
+                                {% endif %}
+                            </div>
+
+
+                            <div class="form-group">
+                                <label for="HayvanCinsi">Kesilecek Hayvan </label>
+                                <select class="form-control" name="HayvanCinsi" id="HayvanCinsi">
+                                    <option {%if  post.HayvanCinsi==1 %} selected {% endif %}  value="1">Keçi</option>
+                                    <option {%if  post.HayvanCinsi==2 %} selected {% endif %}  value="2">Koyun</option>
+                                    <option {%if  post.HayvanCinsi==3 %} selected {% endif %}  value="3">Oğlak</option>
+                                    <option {%if  post.HayvanCinsi==4 %} selected {% endif %}  value="4">Kuzu</option>
+                                    <option {%if  post.HayvanCinsi==5 %} selected {% endif %}  value="5">İnek</option>
+                                    <option {%if  post.HayvanCinsi==6 %} selected {% endif %}  value="6">Sığır</option>
+                                </select>
+                            </div>
+
+                            <div class="form-group">
+                                <label for="Aciklama">NOT :
+                                </label>
+                                <textarea class="form-control {{err.Aciklama_valid}}" id="Aciklama" name="Aciklama" rows="9" placeholder="Kısa Açıklama...">{{ post.Aciklama }}</textarea>
+                            </div>
+
+                        </div>
+
+
+
+                    </div>
+
+                </div>
+
+
+            </div>
+        </div>
+
+        <div class="col-md-3">
+            <div class="row">
+                <div class="col-md-12">
+                    <div class="card">
+                        <div class="card-header">
+                            <strong>Muhasebe</strong>
+                        </div>
+
+                        <div class="card-body">
+
+
+                            <div class="form-group">
+                                <label for="KurbanFiyati">Kurban Fiyati</label><small><code> **</code></small>
+                                <input class="form-control {{err.KurbanFiyati_valid}}" id="KurbanFiyati" name="KurbanFiyati" value="{{post.KurbanFiyati|stringformat:"%.2f"}}" type="text" placeholder="Kurban Fiyatı"> {% if err.KurbanFiyati_error %}
+                                <div class="invalid-feedback" style="display:block">{{err.KurbanFiyati}}</div>
+                                {% endif %}
+                            </div>
+
+
+
+
+                        </div>
+
+
+
+                    </div>
+
+                </div>
+                <div class="col-md-12">
+                    <div class="card">
+                        <div class="card-header">
+                            <strong>Kaydet</strong>
+                        </div>
+
+          
+
+
+                        <div class="card-footer">
+
+                            <button class="btn btn-sm btn-primary" type="submit"> Kaydet</button>
+                            <button class="btn btn-sm btn-warning" value="gruplaraDon" name="kaydet" type="submit">Kaydet ve Gruplara Dön</button>
+                            <br>
+                        </div>
+                    </div>
+                </div>
+
+            </div>
+        </div>
+    </div>
+</form>

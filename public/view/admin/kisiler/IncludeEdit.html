@@ -1,0 +1,143 @@
+
+
+
+
+<form method="POST" action="/{{routerName}}/update" accept-charset="UTF-8" class="form-control1" id="{{RootName}}-update" enctype="multipart/form-data">
+    <input name="_csrf" type="hidden" value="{{ csrf }}">
+    <input name="_method" type="hidden" value="PUT">
+    <input class="form-control {{err.ID}}" id="ID" name="ID" value="{{post.ID}}" type="hidden">
+
+    <div class="row">
+        <div class="col-md-6">
+
+            <div class="card">
+                <div class="card-header">
+                    <strong>{% if title %} {{ title }} - {% else %} STNC OTOMASYON SİSTEMi
+                        {% endif %}</strong>
+                    <small>Form</small>
+                </div>
+
+
+                <div class="card-body">
+
+                    <div class="form-group">
+                        <label for="AdSoyad">Ad Soyad</label>
+
+                        <input class="form-control {{err.AdSoyad_valid}}" id="AdSoyad" name="AdSoyad"
+                            value="{{post.AdSoyad}}" type="text"> 
+                            
+                            
+                            {% if err.AdSoyad_error %}
+                        <div class="invalid-feedback" style="display:block">{{err.AdSoyad}}</div>
+                        {% endif %}
+                      
+
+                    </div>
+
+
+                    <div class="form-group">
+                        <label for="Telefon">Telefon</label>
+                        <input class="form-control {{err.Telefon_valid}}" id="Telefon" name="Telefon"
+                            value="{{post.Telefon}}" type="text"> {% if err.Telefon_error %}
+                        <div class="invalid-feedback" style="display:block">{{err.Telefon}}</div>
+                        {% endif %}
+                    </div>
+
+
+
+
+
+
+
+
+
+                </div>
+            </div>
+
+           
+                <div class="card">
+
+
+                    <div class="card-body">
+
+
+                        <button class="btn btn-sm btn-success" type="submit"> Kaydet</button>
+                        <button class="btn btn-sm btn-danger" type="reset"> VAZGEÇ</button>
+                        <a class="btn btn-sm btn-primary" href="/admin/kisiler/"> Kişilere Dön</a>
+
+
+                    </div>
+
+
+                </div>
+            
+        </div>
+
+        <div class="col-md-6">
+
+            <div class="card">
+
+
+                <div class="card-body">
+
+
+                    <div id="gr-Kisi2" class="form-group gr-Kisi2">
+                        <label for="ReferansKisi1">Referans Kisi  </label>
+
+                        <select class="selectpicker2 with-ajax form-control {{err.ReferansKisi1_valid}}" id="ReferansKisi1" name="ReferansKisi1" value="{{post.ReferansKisi1}}" data-live-search="true">
+                                    {% if post.ReferansKisi1 != 0 %}
+                                       <option selected value="{{referansData.ID}}"> {{referansData.AdSoyad}} </option>
+                                    {% endif %}
+                        </select> 
+                           {% if err.Kisi1_error %}
+                               <div class="invalid-feedback" style="display:block">{{err.ReferansKisi1}}</div>
+                           {% endif %}
+
+                           <button type="button" data-id="2" class="btn btn-sm btn-primary kisiKaldir">Seçili Kişiyi Kaldır</button>
+
+                    </div>
+
+
+                    {% if post.ReferansKisi1 != 1 %} 
+                    <div class="form-group">
+                        <label id="telefon" for="Telefon">Telefon  </label><strong> {{referansData.Telefon}}</strong>
+                        <br>
+                        <a href="/admin/kisiler/edit/{{referansData.ID}}">Kişi Bilgilerini Düzenle</a>
+                    </div>
+                {% endif %}
+             
+                    <div class="form-group">
+                        <label for="Email">Email adresi</label>
+                        <input class="form-control {{err.Email_valid}}" id="Email" name="Email"
+                            value="{{post.Email}}" type="text"> {% if err.Email_error %}
+                        <div class="invalid-feedback" style="display:block">{{err.Agirlik}}</div>
+                        {% endif %}
+                    </div>
+
+
+
+                    <div class="form-group">
+                        <label for="Adres"> Adresi </label>
+                        <textarea class="form-control {{err.Adres_valid}}" id="Adres" name="Adres" rows="3">{{ post.Adres }}</textarea>
+                    </div>
+
+
+
+                    <div class="form-group">
+                        <label for="Aciklama"> Açıklama </label>
+                        <textarea class="form-control {{err.Aciklama_valid}}" id="Aciklama" name="Aciklama" rows="3">{{ post.Aciklama }}</textarea>
+                    </div>
+
+
+                </div>
+            </div>
+
+        </div>
+
+
+
+    </div>
+</form>
+
+
+

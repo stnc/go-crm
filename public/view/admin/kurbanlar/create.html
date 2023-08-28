@@ -1,0 +1,62 @@
+{% extends "../app.html" %} 
+{% block content %}
+ {% set RootName = 'admin-kurban' %} 
+ {% set routerName = 'admin/kurban'%}
+
+ {% include "../viewComponents/alertMsg.html"%}
+
+ <div class="row">
+    <div class="col-md-12 mb-4">
+        <ul class="nav nav-tabs" role="tablist">
+            <li class="nav-item">
+                <a class="nav-link active" data-toggle="tab" href="#home4" role="tab" aria-controls="home"
+                    aria-selected="true">
+                    <svg class="c-icon">
+                        <use xlink:href="/assets/admin/vendors/@coreui/icons/svg/free.svg#cil-calculator"></use>
+                    </svg> Kurban Ekle 
+                </a>
+             </li>
+
+            <li class="nav-item">
+                    <a class="nav-link" data-toggle="tab" href="#profile4" role="tab" aria-controls="profile"
+                        aria-selected="false">
+                        <svg class="c-icon">
+                            <use xlink:href="/assets/admin/vendors/@coreui/icons/svg/free.svg#cil-filter-photo"></use>
+                        </svg> Resim Yönetimi
+                    </a>
+            </li>
+          
+        </ul>
+        <div class="tab-content">
+            <div class="tab-pane active" id="home4" role="tabpanel">
+                {% include "kurbanCreateInclude.html"%}
+
+            </div>
+            <div class="tab-pane" id="profile4" role="tabpanel">
+                {% include "../viewComponents/uploader/uploaderEmpty.html"%}
+
+            </div>
+            <div class="tab-pane" id="messages4" role="tabpanel">
+
+
+
+            </div>
+        </div>
+    </div>
+</div>
+
+
+{% endblock %} 
+
+{% block jsInline %}
+<!-- <script src="https://cdn.jsdelivr.net/npm/jquery-validation@1.19.2/dist/jquery.validate.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-select/1.13.1/js/bootstrap-select.min.js"></script>
+<script src="https://unpkg.com/emodal@1.2.69/dist/eModal.min.js"></script> -->
+<script src="/assets/admin/js/jquery.validate.min.js"></script>
+<script src="/assets/admin/js/jquery.mask.min.js"></script>
+<script src="/assets/admin/js/bootstrap-select.min.js"></script>
+<script src="/assets/admin/js/ajax-bootstrap-select.min.js"></script>
+<script src="/assets/admin/js/eModal.min.js"></script>
+<link href="/assets/admin/stnc-upload/css/dropzone.min.css" type="text/css" rel="stylesheet" />
+{% include "kurbanlarJS.html"%}
+{% endblock %}

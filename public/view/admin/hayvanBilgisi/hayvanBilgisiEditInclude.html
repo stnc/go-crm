@@ -1,0 +1,141 @@
+<form method="POST" action="/{{routerName}}/update" accept-charset="UTF-8" class="form-control1" id="{{RootName}}-update" enctype="multipart/form-data">
+
+    <div class="row">
+        <input name="_csrf" type="hidden" value="{{ csrf }}">
+        <input name="_method" type="hidden" value="PUT">
+        <input class="form-control {{err.ID}}" id="ID" name="ID" value="{{post.ID}}" type="hidden">
+
+
+
+
+
+
+        <div class="col-md-10">
+            <div class="card">
+                <div class="card-header">
+                    <strong>{% if title %} {{ title }} - {% else %} STNC OTOMASYON SİSTEMi
+                        {% endif %}</strong>
+                    <small>Form</small>
+                </div>
+
+
+                <div class="card-body">
+
+
+                    <div class="form-group">
+                        <label for="HayvanSatisYerleriID">Ahır</label>
+
+                        <select class="form-control {{err.HayvanSatisYerleriID_valid}}" name="HayvanSatisYerleriID"
+                            id="HayvanSatisYerleriID">
+                            {% for hayvanSatis in hayvanSatisyerleri %}
+                            <option {%if post.HayvanSatisYerleriID==hayvanSatis.ID %} selected {% endif %}
+                                value="{{hayvanSatis.ID}}">{{hayvanSatis.YerAdi}}</option>
+                            {% endfor %}
+                        </select>
+
+
+                        {% if err.HayvanSatisYerleriID_error %}
+                        <div class="invalid-feedback" style="display:block">{{err.HayvanSatisYerleriID}}</div>
+                        {% endif %}
+                    </div>
+
+
+                    <div class="form-group">
+                        <label for="KupeNo">Küpe No</label>
+                        <input class="form-control {{err.KupeNo_valid}}" id="KupeNo" name="KupeNo"
+                            value="{{post.KupeNo}}" type="text"> {% if err.KupeNo_error %}
+                        <div class="invalid-feedback" style="display:block">{{err.KupeNo}}</div>
+                        {% endif %}
+                    </div>
+
+
+
+                    <div class="form-group">
+                        <label for="Agirlik">Agirlik </label>
+                        <input class="form-control {{err.Agirlik_valid}}" id="Agirlik" name="Agirlik"
+                            value="{{post.Agirlik}}"  type="text"> {% if err.Agirlik_error %}
+                        <div class="invalid-feedback" style="display:block">{{err.Agirlik}}</div>
+                        {% endif %}
+                    </div>
+
+                    <div class="form-group">
+                        <label for="HayvanCinsi">Hayvan Cinsi </label>
+                        <select class="form-control" name="HayvanCinsi" id="HayvanCinsi">
+                            <option {%if post.HayvanCinsi==5 %} selected {% endif %} value="5">İnek</option>
+                            <option {%if post.HayvanCinsi==6 %} selected {% endif %} value="6">Sığır</option>
+                            <option {%if post.HayvanCinsi==1 %} selected {% endif %} value="1">Keçi</option>
+                            <option {%if post.HayvanCinsi==2 %} selected {% endif %} value="2">Koyun</option>
+                            <option {%if post.HayvanCinsi==3 %} selected {% endif %} value="3">Oğlak</option>
+                            <option {%if post.HayvanCinsi==4 %} selected {% endif %} value="4">Kuzu</option>
+                        </select>
+                        {% if err.HayvanCinsi_error %}
+                        <div class="invalid-feedback" style="display:block">{{err.HayvanCinsi}}</div>
+                        {% endif %}
+                    </div>
+
+                    <div class="row">
+                        <div class="form-group col-sm-10">
+                            <label for="AlisFiyati">Alis Fiyati (Kilo Başına) </label>
+                            <select class="form-control" name="AlisFiyati" id="AlisFiyati">
+                                <option {%if post.AlisFiyati==1 %} selected {% endif %} value="alisFiyati1">{{alisFiyati1}}
+                                </option>
+                                <option {%if post.AlisFiyati==2 %} selected {% endif %} value="alisFiyati1">{{alisFiyati2}}
+                                </option>
+                                <option {%if post.AlisFiyati==3 %} selected {% endif %} value="alisFiyati1">{{alisFiyati3}}
+                                </option>
+                            </select>
+                            {% if err.HayvanCinsi_error %}
+                            <div class="invalid-feedback" style="display:block">{{err.HayvanCinsi}}</div>
+                            {% endif %}
+                            <div class="invalid-feedback" style="display:block"> <a style="color: brown;"
+                                    href="/admin/options/">Kilo değerlerini değiştirmek için tıklayın, yaptığınız
+                                    değişiklik daha önce kayıtlı olan hayvanların fiyatını etkilemez.</a></div>
+                            <input type="hidden" name="AlisFiyati" value="{{post.AlisFiyati}}" id="AlisFiyati" />
+
+                        </div>
+                        <div class="form-group col-sm-2">
+
+                            <span> </span>
+                            <br>
+                            <span style="    font-size: 30px; font-weight: bold;"> TL</span>
+                        </div>
+                    </div>
+
+                </div>
+            </div>
+        </div>
+
+
+
+
+        <div class="col-md-2">
+
+            <div class="card">
+                <div class="card-body">
+
+                    <button class="btn btn-sm btn-primary" value="kaydet" name="kaydet" type="submit">Kaydet ve düzenle </button>
+                    <br>
+                    <br>
+                    <button class="btn btn-sm btn-success" value="yeniEkle" name="kaydet" type="submit">Kaydet ve Yeni Ekle</button>
+                    <br>
+                    <br>
+                    <a class="btn btn-sm btn-success" href="/admin/hayvanBilgisi/">Kurban Listesi</a>
+                    <br>
+                    <br>
+                    {% if lastID!=0 %}
+                    <a class="btn btn-sm btn-warning" href="/admin/hayvanBilgisi/edit/{{lastID}}">Önceki Düzenle</a>      
+                    <br>
+                    <br>
+                    {% endif %}
+                    
+                    {% if nextID!=0 %}
+                    <a class="btn btn-sm btn-warning" href="/admin/hayvanBilgisi/edit/{{nextID}}">Sonraki Düzenle</a>
+                    {% endif %}
+                </div>
+            </div>
+
+        </div>
+
+       </div>
+ 
+</form>

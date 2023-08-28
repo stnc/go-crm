@@ -1,0 +1,98 @@
+{% extends "../app.html" %} {% block content %} {% set RootName = 'admin-kisiler' %} {% set routerName = 'admin/kisiler' %}
+{% include "../viewComponents/alertMsg.html"%}
+<div class="row">
+    <div class="col-lg-12">
+        <div class="card">
+            <div class="card-header"><i class="fa fa-align-justify"></i> Kişi List</div>
+            <div class="card-body">
+                <table class="table table-responsive-sm table-bordered">
+                    <thead>
+                        <tr>
+                            <th>Ad Soyad</th>
+                            <th>Telefon</th>
+                            <th>Email</th>
+                            <th>Eklenme Tarihi</th>  
+                         
+                            <th>Olaylar</th>
+
+                        </tr>
+                    </thead>
+                    <tbody>
+
+
+                        {% for list in posts %}
+
+                        <tr>
+                            <td>{{list.AdSoyad|truncatechars:35 }}</td>
+                            <td>{{list.Telefon }}</td>
+                            <td>{{list.Email }}</td>
+                            <td> {{tarih.OnlyDate(list.CreatedAt.String())}} </td>
+                  
+                            <td> 
+
+                                <div class="btn-group">
+                                    <button
+                                        class="btn btn-info btn-sm dropdown-toggle"
+                                        type="button" data-toggle="dropdown"
+                                        aria-haspopup="true"
+                                        aria-expanded="false">İşlemler </button>
+                                    <div class="dropdown-menu"
+                                        x-placement="bottom-start"
+                                        style="will-change: transform; margin: 0px;">
+
+
+                                        <a class="dropdown-item" target="_blank"
+                                        href="/{{routerName}}/edit/{{list.ID}}"> Düzenle</a>
+
+
+                                        <a class="dropdown-item" 
+                                        href="/{{routerName}}/delete/{{list.ID}}">Sil  </a>
+
+                                    </div>
+                                </div>
+                            </td>
+
+                            
+                        </tr>
+
+                        {% endfor %}
+
+                    </tbody>
+                </table>
+                <nav>
+
+                   {% if paginator.HasPages() %}
+                    <ul class="pagination">
+                        {%if paginator.HasPrev() %}
+                        <li class="page-item">
+                            <a class="page-link" href="{{paginator.PageLinkFirst()}}">First</a>
+                        </li>
+                        <li class="page-item">
+                            <a class="page-link" href="{{paginator.PageLinkPrev()}}">&lt;</a>
+                        </li>
+                        {% else %}
+                        <li class="page-item disabled"><a class="page-link"> First</a></li>
+                        <li class="page-item disabled"><a class="page-link">&lt;</a></li>
+                        {% endif %} {% for page in paginator.Pages%}
+
+                        <li {% if paginator.IsActive(page) %} class="active page-item" {% endif %}>
+                            <a class="page-link" href="{{ paginator.PageLink(page) }} ">{{page}}</a>
+                        </li>
+
+                        {% endfor %} {% if paginator.HasNext %}
+                        <li class="page-item"><a class="page-link" href="{{paginator.PageLinkNext()}}">&gt; </a></li>
+                        <li class="page-item"><a class="page-link" href="{{paginator.PageLinkLast()}}">Last </a></li>
+                        {% else %}
+                        <li class="disabled page-item"><a class="page-link">&gt;</a></li>
+                        <li class="disabled page-item"><a class="page-link">Last</a></li>
+                        {%endif%}
+                    </ul>
+                    {%endif%}
+                </nav>
+            </div>
+        </div>
+    </div>
+
+</div>
+
+{% endblock %} {% block jsInline %} {% endblock %}

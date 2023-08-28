@@ -1,0 +1,473 @@
+{% extends "../app.html" %}
+{% block content %}
+{% set RootName = 'admin-gruplar' %}
+{% set routerName = 'admin/gruplar' %}
+{% include "../viewComponents/alertMsg.html"%}
+
+
+<div class="row">
+    <!-- <div class="col-4 col-sm-4 col-md-2 mb-3 mb-xl-0">
+        <a class="btn btn-block btn-primary" href="/admin/gruplar/create">Yeni Grup Oluştur</a>
+  </div> -->
+  <div class="col-4 col-sm-4 col-md-2  mb-3 mb-xl-0">
+    <a class="btn btn-block btn-primary" href="/admin/gruplar/createEmpty">Boş Grup Oluştur</a>
+</div>
+<div class="col-4 col-sm-4 col-md-2  mb-3 mb-xl-0">
+    <a class="btn btn-block btn-primary" href="/admin/gruplar/hayvanata">Hayvan Atamaları</a>
+</div>
+
+<div class="col-4 col-sm-4 col-md-2  mb-3 mb-xl-0">
+    <a class="btn btn-block btn-primary" href="/admin/hayvanBilgisi/create">Kurbanlık Hayvan Ekle</a>
+</div>
+
+
+<div class="col-4 col-sm-4 col-md-2  mb-3 mb-xl-0">
+    <a class="btn btn-block btn-primary" href="/admin/hayvanBilgisi">Kurbanlıklar</a>
+</div>
+
+
+<div class="col-4 col-sm-4 col-md-2  mb-3 mb-xl-0">
+    <a class="btn btn-block btn-success" href="/admin/gruplar/excel">Excel Çıktısı</a>
+</div>
+
+</div>
+
+
+
+{% if !grupBilgileri %}
+<div class="col-md-12 flashMsg">
+    <div class="alert alert-success alert-dismissible">
+        <button type="button" class="close" data-dismiss="alert" aria-hidden="true">×</button>
+        <h5><i class="icon fas fa-check"></i> Uyarı!</h5>
+        Grup Bulunamadı
+    </div>
+</div>
+<!-- /.alert -->
+{% endif %}
+
+
+
+
+
+
+<div class="row grid">
+
+    {% for grupBilgi in grupBilgileri %}
+
+    <div class="col-sm-12 col-xl-12 element-item {{grupBilgi.GrupIsoTopeName}} sira{{grupBilgi.KesimSiraNo}}"
+        data-category="{{grupBilgi.GrupIsoTopeName}} ">
+        <div class="card border-{{grupBilgi.GrupIsoTopeAlert}} bg-{{grupBilgi.GrupIsoTopeAlert}}">
+            {% if grupBilgi.Durum==2 %}
+            <div class="card-header card-header-noAtama text-center ">
+                Bu Gruba Hayvan Atanmamıştır <a href="/admin/gruplar/hayvanata">Hayvan atamak için tıklayın</a>
+            </div>
+            <hr>
+            {% endif %}
+            <div class="card-header">
+                <div class="card-header-bottom">
+                    <span style="padding: 10px;
+                        margin-right: 9px;" class="badge badge-pill badge-info float-left">Kesim No:
+                        {{grupBilgi.KesimSiraNo}}
+                    </span> 
+                    
+                    
+                    <span style="padding: 10px; margin-right: 9px;" class="badge badge-pill badge-{{grupBilgi.GrupIsoTopeAlert}} float-left">{{grupBilgi.GrupIsoTopeTRname}}
+                    </span> 
+
+                    <strong> Grup Adı:</strong> {{grupBilgi.GrupAdi }} / <strong>Kurban Fiyatı:
+                    </strong>
+
+                    <span class="myMoney2">{{ grupBilgi.ToplamKurbanFiyati|stringformat:"%.2f"}}</span> TL
+
+                    <small>Küpe NO: {{grupBilgi.KupeNo }}</small>
+
+
+                    <div class="btn-group float-right">
+                        <button class="btn btn-info dropdown-toggle btn-sm" type="button" data-toggle="dropdown"
+                            aria-haspopup="true" aria-expanded="false">İşlemler
+                        </button>
+                        <div class="dropdown-menu" x-placement="bottom-start"
+                            style="will-change: transform; margin: 0px;">
+                            <a class="dropdown-item" href="/admin/gruplar/edit/{{grupBilgi.ID}}">Grubu Düzenle</a>
+                        </div>
+                    </div>
+
+                </div>
+
+                <div class="card-header-actions">
+                    <a class="card-header-action btn-setting" href="#">
+                        <svg class="c-icon">
+                            <use xlink:href="assets/vendors/@coreui/icons/svg/free.svg#cil-settings">
+                            </use>
+                        </svg></a>
+                </div>
+
+
+            </div>
+
+            <div class="card-body ">
+                <div class="accordion" id="accordion{{grupBilgi.ID}}" role="tablist">
+                    <div class="card mb-0">
+                        <div class="card-header" id="headingOne{{grupBilgi.ID}}" role="tab">
+                            <h5 class="mb-0">
+                                <a data-toggle="collapse" href="#collapseOne{{grupBilgi.ID}}" aria-expanded="true"
+                                    aria-controls="collapseOne{{grupBilgi.ID}}">
+                                    <span style="color: crimson;">Kesim Sıra No: </span> 
+                                    <span class="myMoney"> {{grupBilgi.KesimSiraNo }} </span>
+                                    <span style="color: crimson;"> / Hisse Fiyatı: </span>
+                                    <span class="myMoney"> {{grupBilgi.KisiBasiDusenHisseFiyati|stringformat:"%.2f" }}
+                                    </span> TL /
+                                    <span style="color: crimson;">Toplam Ağırlık :</span>
+                                    {{grupBilgi.Agirlik}} KG /
+                                    <span style="color: crimson;">Kişi Başı Düşen Tahmini Kilo: </span>
+                                    {{grupBilgi.Agirlik / 7}} KG </a>
+                            </h5>
+                        </div>
+
+
+
+                        <div class="collapse show" id="collapseOne{{grupBilgi.ID}}" role="tabpanel"
+                            aria-labelledby="headingOne{{grupBilgi.ID}}" data-parent="#accordion{{grupBilgi.ID}}">
+                            <div class="card-body">
+                                <div class="row">
+                                    <div class="col-md-12">
+                                        <table
+                                            class="table table-hover table-responsive-sm table-bordered table-striped table-sm">
+                                            <thead>
+                                                <tr>
+                                                    <th class="text-center">No</th>
+                                                    <th>Adı Soyadı</th>
+                                                    <th>Toplam Ödeme</th>
+                                                    <th>Kalan Borç</th>
+                                                    <th>Referans </th>
+                                                    <th>Vekalet</th>
+                                                    <th>İşlemler</th>
+
+                                                </tr>
+                                            </thead>
+                                            <tbody>
+                                                {% for kurban in grupBilgi.KurbanKisiList %}
+
+
+
+                                                {% if kurban.KisiID!=1 %}
+                                                <tr>
+                                                    <td class="text-center">
+                                                        <strong class="text-center">{{forloop.Counter}}</strong>
+                                                    </td>
+                                                    <td>
+                                                        <!-- <a target="_blank" href="https://wa.me/90{{kurban.Telefon }}?text=Test">WhatsApp</a> -->
+                                                        <div>
+                                                            <strong>{{kurban.KisiAdSoyad}}</strong>
+                                                        </div>
+                                                        <div class="small text-muted">
+                                                            <span>Tel</span> | {{kurban.KisiTelefon }}
+                                                        </div>
+                                                        {% if kurban.GrupLideri==0 %}
+                                                        <div><strong style="color: brown;">Grup Lideri
+                                                            </strong></div>
+                                                        {% endif %}
+                                                    </td>
+
+                                                    {% if kurban.BorcDurum!=3 %}
+                                                    <td>
+                                                        <strong class="myMoney2">
+                                                            {{kurban.Bakiye|stringformat:"%.2f"}}</strong>
+                                                        <small>TL</small>
+                                                    </td>
+                                                    {% endif %}
+
+                                                    {% if kurban.BorcDurum!=3 %}
+                                                    <td>
+                                                        <strong class="myMoney3"> 
+                                                            {{kurban.Alacak|stringformat:"%.2f"}}</strong>
+                                                        <small>TL</small>
+
+
+                                                        {% if kurban.BorcDurum==6 %}
+                                                        <small style="padding: 5px;" class="alert alert-danger">Ödeme Tamamlandı</small>
+                                                        {% endif %}
+
+                                                    </td>
+                                                    {% endif %}
+
+
+                                                    {% if kurban.BorcDurum==3 %}
+                                                    <td>
+                                                        <small style="padding: 5px;" class="alert alert-danger">Kasamız Borçlu Durumda</small>
+                                                        <br>
+                                                        <br>
+                                                        <strong class="myMoney2">
+                                                            {{kurban.Borc|stringformat:"%.2f"}}</strong>
+                                                        <small>TL</small>
+                                                    </td>
+                                                    <td>
+                                                    </td>
+                                                    {% endif %}
+
+                                                    <td>
+                                                        {% if kurban.ReferansAdSoyad!="" %}
+
+                                                        <span>{{kurban.ReferansAdSoyad}}</span><br>
+                                                        <strong> TEL:</strong>
+                                                        <small>{{kurban.ReferansTelefon }} </small>
+
+                                                        {% endif %}
+
+
+
+                                                    </td>
+                                                
+                                                    <td>
+                                                        {% if kurban.VekaletDurumu==1 %}
+                                                   
+                                                           <span class="badge badge-warning "> Vekalet Alınmamış</span>
+                                                           <br>
+                                                           <button data-id="{{kurban.ID }}" data-durum="alindi" class="btn btn-sm btn-primary vekaletModal">Alındı Olarak İşaretle</button>
+                                                        {% else %}
+                                                           <span class="badge badge-success "> Vekalet Alınmış</span>
+                                                           <br>
+                                                           <button data-id="{{kurban.ID }}"  data-durum="alinmadi" class="btn btn-sm btn-primary vekaletModal">Alınmadı Olarak İşaretle</button>
+                                                        {% endif %}
+                                                    </td>
+                                                    <td>
+                                                        <div class="btn-group">
+                                                            <button class="btn btn-info dropdown-toggle btn-sm"
+                                                                type="button" data-toggle="dropdown"
+                                                                aria-haspopup="true" aria-expanded="false">İşlemler
+                                                            </button>
+                                                            <div class="dropdown-menu" x-placement="bottom-start"
+                                                                style="will-change: transform; margin: 0px;">
+                                                                
+                                                                <a class="dropdown-item"
+                                                                href="/admin/kurban/edit/{{kurban.ID}}">
+                                                                Aynı Sayfada Düzenle</a>
+
+                                                                <a class="dropdown-item" target="_blank"
+                                                                    href="/admin/kurban/edit/{{kurban.ID}}">
+                                                                    Yeni Sayfada Düzenle</a>
+
+                                                           
+
+                                                                <a class="dropdown-item" target="_blank"
+                                                                    href="/admin/kisiler/edit/{{kurban.KisiID}}">Kişi
+                                                                    Bilgilerine Git </a>
+
+
+                                                                <a class="dropdown-item" target="_blank"
+                                                                    href="/admin/kurban/edit/{{kurban.ID}}?action=odemelerList">Ödemeler</a>
+
+
+                                                                <a class="dropdown-item"
+                                                                    href="/admin/kurban/grupLideri/{{kurban.ID}}?grupID={{kurban.GrupID}}">Grup
+                                                                    Lideri Yap</a>
+
+                                                                <a class="dropdown-item"
+                                                                    href="/admin/gruplar/edit/{{kurban.GrupID}}">Grubunu
+                                                                    Düzenle</a>
+                                                            </div>
+                                                            <span>|</span>
+                                                            <a class="btn btn-danger btn-sm" target="_blank"
+                                                            href="/admin/kurban/edit/{{kurban.ID}}?action=odemelerList">Ödeme</a>
+                                                        </div>
+
+                                                    </td>
+                                                </tr>
+
+                                                {% else %}
+                                                <tr>
+                                                    <td class="text-center">
+                                                        <strong class="text-center">{{forloop.Counter}}</strong>
+                                                    </td>
+                                                    <td colspan="5">
+                                                        <div style="padding:5px" class="alert alert-danger"
+                                                            role="alert">
+                                                            Kişi Atanmamıştır <a target="_blank"
+                                                                href="/admin/kurban/edit/{{kurban.ID}}">atamak
+                                                                için tıklayınız</a></div>
+                                                    </td>
+                                             
+                                                    <td>
+
+                                                        <div class="btn-group">
+                                                            <button class="btn btn-info btn-sm dropdown-toggle"
+                                                                type="button" data-toggle="dropdown"
+                                                                aria-haspopup="true" aria-expanded="false">İşlemler
+                                                            </button>
+                                                            <div class="dropdown-menu" x-placement="bottom-start"
+                                                                style="will-change: transform; margin: 0px;">
+
+
+                                                                <a class="dropdown-item" target="_blank"
+                                                                    href="/admin/kurban/edit/{{kurban.ID}}">Yeni
+                                                                    Sayfada Düzenle</a>
+
+
+                                                                <a class="dropdown-item"
+                                                                    href="/admin/kurban/edit/{{kurban.ID}}">Aynı
+                                                                    Sayfada Düzenle</a>
+
+
+
+                                                                    <a class="dropdown-item" target="_blank"
+                                                                    href="/admin/kurban/edit/{{kurban.ID}}?action=odemelerList">Ödemelerini Göster</a>
+
+
+                                                                <a class="dropdown-item"
+                                                                    href="/admin/gruplar/edit/{{kurban.GrupID}}">Grubunu
+                                                                    Düzenle</a>
+                                                            </div>
+
+                                                            <span>|</span>
+                                                            <a class="btn btn-danger btn-sm" target="_blank"
+                                                            href="/admin/kurban/edit/{{kurban.ID}}?action=odemelerList">Ödeme</a>
+
+                                                        </div>
+
+                                                    </td>
+                                                
+                                                </tr>
+                                                {% endif%}
+                                                {% endfor %}
+
+                                            </tbody>
+                                        </table>
+
+                                    </div>
+
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="card mb-0">
+                        <div class="card-header text-" id="headingTwo{{grupBilgi.ID}}" role="tab">
+                            <h5 class="mb-0"><a data-toggle="collapse" href="#collapseTwo{{grupBilgi.ID}}"
+                                    aria-expanded="true" aria-controls="collapseTwo{{grupBilgi.ID}}">Grubun Muhasebe
+                                    Bilgileri</a></h5>
+                        </div>
+                        <div class="collapse" id="collapseTwo{{grupBilgi.ID}}" role="tabpanel"
+                            aria-labelledby="headingTwo{{grupBilgi.ID}}" data-parent="#accordion{{grupBilgi.ID}}">
+                            <div class="card-body">
+                                <div class="row">
+                                    <div class="col-sm-4 col-lg-4 col-md-4">
+                                        <div class="card">
+                                            <div class="card-body">
+                                                <div class="text-value-md moneyFormat">
+                                                    {{grupBilgi.ToplamOdemeler|stringformat:"%.2f" }}
+                                                </div>TL
+                                                <div>Toplam Ödemeler</div>
+                                                <div> <a target="_blank"
+                                                        href="/admin/kurban/edit/{{kurban.ID}}">Düzenle</a>
+                                                </div>
+
+                                            </div>
+                                        </div>
+                                    </div>
+
+                                    <div class="col-sm-4 col-lg-4 col-md-4">
+                                        <div class="card">
+                                            <div class="card-body">
+                                                <div class="text-value-md moneyFormat">
+                                                    {{grupBilgi.KalanBorclar|stringformat:"%.2f"}}
+                                                </div>TL
+                                                <strong>Kalan Borçlar Toplamı</strong>
+                                                <div>
+                                                    <a target="_blank"
+                                                        href="/admin/kurban/edit/{{kurban.ID}}">Düzenle</a>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+
+
+                                    <div class="col-sm-4 col-lg-4 col-md-4">
+                                        <div class="card">
+                                            <div class="card-body">
+                                                <div class="text-value-md">
+                                                    {{grupBilgi.KasaBorcu|stringformat:"%.2f" }} TL
+                                                </div>
+                                                <div>Bizim Borcumuz</div>
+                                                <div> <a target="_blank"
+                                                        href="/admin/kurban/edit/{{kurban.ID}}">Düzenle</a>
+                                                </div>
+
+                                            </div>
+                                        </div>
+                                    </div>
+
+                                </div>
+
+                            </div>
+                        </div>
+                    </div>
+
+                </div>
+            </div>
+        </div>
+    </div>
+    {% endfor %}
+
+</div>
+
+
+
+  
+
+
+    <!-- Modal -->
+    <div class="modal fade" id="vekaletModal" tabindex="-1" role="dialog" aria-labelledby="vekaletModalLabel" aria-hidden="true">
+        <div class="modal-dialog" role="document">
+          <div class="modal-content">
+            <div class="modal-header">
+              <h5 class="modal-title" id="vekaletModalLabel">Onaylama</h5>
+              <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                <span aria-hidden="true">&times;</span>
+              </button>
+            </div>
+            <div class="modal-body">
+                ...
+            </div>
+            <div class="modal-footer">
+              <button type="button" class="btn btn-secondary" data-dismiss="modal">Kapat</button>
+              <a href="" class="btn btn-primary">Evet Onaylıyorum</a>
+            </div>
+          </div>
+        </div>
+      </div>
+    
+
+{% endblock %}
+
+
+{% block jsInline %}
+
+<script src="/assets/admin/js/tooltips.js"></script>
+<script src="/assets/admin/js/jquery.mask.min.js"></script>
+
+<script>
+    //-------------------vekalat onayı ---------
+    $('.vekaletModal').click(function(){
+        let idAdres = $(this).data('id');
+        var durum = $(this).data('durum');
+        $('#vekaletModal').modal('show');
+        if (durum=="alindi"){
+            $('#vekaletModal .modal-footer a').attr('href','/admin/kurban/vekaletDurumu/'+idAdres+'?status=2');
+            $('#vekaletModal .modal-body').text("Kurbanınızı almaya aldırmaya kesmeye kestirmeye hisselendirmeye beni/bizi vekil tayin ediyor musunuz?");
+        } else {
+            $('#vekaletModal .modal-footer a').attr('href','/admin/kurban/vekaletDurumu/'+idAdres+'?status=1');
+            $('#vekaletModal .modal-body').text("Vekalet alınmadı olarak düzeltmek istiyormusunuz");
+        }
+    });
+
+    var options = {
+        valueNames: ['adsoyad', 'telefon', 'ref1', 'refTel']
+    };
+
+    $(function () { //shorthand document.ready function
+
+        $('.moneyFormat').mask('#.##0,00', { reverse: true });
+    });
+
+</script>
+{% endblock %}

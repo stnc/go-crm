@@ -1,0 +1,53 @@
+{% extends "../app.html" %} 
+{% block content %}
+ {% set RootName = 'admin-kisiler' %} 
+ {% set routerName = 'admin/kisiler'%}
+
+ {% include "../viewComponents/alertMsg.html"%}
+
+ <div class="row">
+    <div class="col-md-12 mb-4">
+        <ul class="nav nav-tabs" role="tablist">
+            <li class="nav-item">
+                <a class="nav-link active" data-toggle="tab" href="#home4" role="tab" aria-controls="home"
+                    aria-selected="true">
+                    <svg class="c-icon">
+                        <use xlink:href="/assets/admin/vendors/@coreui/icons/svg/free.svg#cil-calculator"></use>
+                    </svg> Kişi Ekle 
+                </a>
+             </li>
+
+     
+          
+        </ul>
+        <div class="tab-content">
+            <div class="tab-pane active" id="home4" role="tabpanel">
+                {% include "IncludeCreate.html"%}
+
+            </div>
+       
+    
+        </div>
+    </div>
+</div>
+
+
+{% endblock %}
+
+
+{% block jsInline %}
+<script src="/assets/admin/js/bootstrap-select.min.js"></script>
+<link href="/assets/admin/css/select2.min.css" rel="stylesheet" />
+<script src="/assets/admin/js/jquery.mask.min.js"></script>
+<script src="/assets/admin/js/select2.min.js"></script>
+<script src="/assets/admin/js/ajax-bootstrap-select.min.js"></script>
+<script src="/assets/admin/js/eModal.min.js"></script>
+<script src="/assets/admin/js/jquery.validate.min.js"></script>
+<script>
+    $("#AdSoyad").select2({
+        tags: true
+    });
+
+</script>
+{% include "kisiJS.html"%}
+{% endblock %}

@@ -1,0 +1,132 @@
+
+
+<form method="POST" action="/{{routerName}}/store" accept-charset="UTF-8" class="form-control1" id="{{RootName}}-store"
+    enctype="multipart/form-data">
+    <input name="_csrf" type="hidden" value="{{ csrf }}">
+    <input name="_method" type="hidden" value="PUT">
+
+
+    <div class="row">
+        <div class="col-md-6">
+
+            <div class="card">
+                <div class="card-header">
+                    <strong>{% if title %} {{ title }} - {% else %} STNC OTOMASYON SİSTEMi
+                        {% endif %}</strong>
+                    <small>Form</small>
+                </div>
+
+
+                <div class="card-body">
+
+                    <div class="form-group">
+                        <label for="AdSoyad">Ad Soyad</label>
+                                         
+                            <select class="form-control form-select form-select-lg mb-3 {{err.AdSoyad_valid}}" id="AdSoyad" name="AdSoyad">
+                                <option disabled="disabled" selected="selected"></option>
+
+                                {% for list in kisiler %}
+                                   <option  value="{{list.AdSoyad }}"> {{list.AdSoyad }}</option>
+                                {% endfor %}
+                           </select> 
+                            
+                            {% if err.AdSoyad_error %}
+                              <div class="invalid-feedback" style="display:block">{{err.AdSoyad}}</div>
+                           {% endif %}
+                           <span class="text-muted" style="color: red!important;"> Eğer kişi arama listesinde yok ise ismini yazarsanız kayıt yapar
+                        <br>       
+                        </span>
+                        
+                    </div>
+
+
+                    <div class="form-group">
+                        <label for="Telefon">Telefon</label>
+                        <input class="form-control {{err.Telefon_valid}}" id="Telefon" name="Telefon"
+                            value="{{post.Telefon}}" type="text"> {% if err.Telefon_error %}
+                        <div class="invalid-feedback" style="display:block">{{err.Telefon}}</div>
+                        {% endif %}
+                    </div>
+
+
+                </div>
+            </div>
+
+           
+                <div class="card">
+
+
+                    <div class="card-body">
+
+
+                        <button class="btn btn-sm btn-primary" type="submit"> Kaydet</button>
+                        <button class="btn btn-sm btn-danger" type="reset"> VAZGEÇ</button>
+
+
+                    </div>
+
+
+                </div>
+            
+        </div>
+
+        <div class="col-md-6">
+
+            <div class="card">
+
+
+                <div class="card-body">
+
+
+                    <div id="gr-Kisi2" class="form-group gr-Kisi2">
+                        <label for="ReferansKisi1">Referans Kisi  {{referansData1.AdSoyad}} </label>
+
+                        <select class="selectpicker2 with-ajax form-control {{err.ReferansKisi1_valid}}" id="ReferansKisi1" name="ReferansKisi1" value="{{post.ReferansKisi1}}" data-live-search="true">
+                                    {% if referansData1 %}
+                                       <option selected value="{{referansData1.ID}}"> {{referansData1.AdSoyad}} </option>
+                                    {% endif %}
+                        </select> 
+                           {% if err.Kisi1_error %}
+                               <div class="invalid-feedback" style="display:block">{{err.ReferansKisi1}}</div>
+                           {% endif %}
+                    </div>
+
+               
+
+               
+                    <div class="form-group">
+                        <label for="Email">Email Adresi</label>
+                        <input class="form-control {{err.Email_valid}}" id="Email" name="Email"
+                            value="{{post.Email}}" type="text"> {% if err.Email_error %}
+                        <div class="invalid-feedback" style="display:block">{{err.Agirlik}}</div>
+                        {% endif %}
+                    </div>
+
+
+                    <div class="form-group">
+                        <label for="Adresi"> Adresi
+                        </label>
+                        <textarea class="form-control {{err.Adresi_valid}}" id="Adresi" name="Adresi"
+                            rows="5">{{ post.Adresi }}</textarea>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="Aciklama"> Aciklama
+                        </label>
+                        <textarea class="form-control {{err.Aciklama_valid}}" id="Aciklama" name="Aciklama"
+                            rows="3">{{ post.Aciklama }}</textarea>
+                    </div>
+
+
+
+                </div>
+            </div>
+
+        </div>
+
+
+
+    </div>
+</form>
+
+

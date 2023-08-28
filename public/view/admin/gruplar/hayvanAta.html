@@ -1,0 +1,562 @@
+{% extends "../app.html" %}
+ {% block content %}
+{% set RootName = 'admin-gruplar' %}
+{% set routerName = 'admin/gruplar' %}
+
+
+{% include "../viewComponents/alertMsg.html"%}
+
+<form method="POST" action="/{{routerName}}/hayvanata" accept-charset="UTF-8" class="form-control1"
+    id="{{RootName}}-store" enctype="multipart/form-data">
+
+    <input name="_csrf" type="hidden" value="{{ csrf }}">
+    <input name="_method" type="hidden" value="PUT">
+    <input type="hidden" value="{{ post.Agirlik }}" id="Agirlik" name="Agirlik">
+    <input type="hidden" value="{{post.SatisFiyatTuru }}"  id="SatisFiyatTuru" name="SatisFiyatTuru">
+    <input type="hidden" value="{{post.SatisFiyati }}" id="SatisFiyati" name="SatisFiyati">
+    <input id="ID" name="ID" value="{{post.ID}}" type="hidden">
+    <input id="HayvanBilgisiID" name="HayvanBilgisiID"  type="hidden">
+<div class="row">
+      
+    <div class="col-md-12">
+        <div class="card">
+            <div class="card-body">
+      
+                <button class="btn btn-sm btn-primary" value="kaydet" name="kaydet" type="submit">Kaydet ve düzenle
+                </button>
+
+                <!-- <button class="btn btn-sm btn-success" value="yeniEkle" name="kaydet" type="submit">Kaydet ve Yeni Ekle</button> -->
+
+            </div>
+        </div>
+    </div>
+
+</div>
+
+    <div class="row">
+
+
+        {% if !hayvanlar %}
+        <div class="col-md-12">
+            <div class=" alert alert-primary" role="alert">
+            <a href="/admin/hayvanBilgisi/create">
+                Eklenmiş bir hayvan bulunamadı yada gruplara atanmış bir hayvan bulunamadı
+                lütfen buradan hayvan ekleyiniz</a>
+              </div>
+        </div>
+
+        {% else %}
+
+            <div class="col-md-6">
+                <div class="row">
+                    <div class="col-md-12">
+                        <div class="card">
+                            <div class="card-header"> <strong>  Hayvanlar </strong>
+                             
+                            </div>
+                            <div class="card-body">
+    
+    
+                     
+<div id="myList">
+    <div class="card">
+        <div class="card-body">
+            <div class="row">
+                <div class="col-md-12">
+                    <span class="help-block">Hayvan Ara</span>
+                    <input class="form-control search" id="text-input" type="text" name="text-input"
+                        placeholder="Hayvan Ara">
+               
+                   
+                </div>
+
+
+                <div class="col-md-4">
+                    <button type="button" class="CustomClear btn btn-info btn-sm">Aramayı Temizle</button>
+                    <br>
+                    <button type="button" class="allitems btn btn-success btn-sm">
+                       Hepsini Göster
+                      </button>
+                </div>
+
+                <table style="margin-top: 15px; display: none;"  class="table table-responsive-sm table-sm table-striped stnc-table">
+                    <thead class="theachShow">
+                        <tr>
+                            <th>Küpe </th>
+                            <th>Ağırlık</th>
+                            <th>İşlemler</th>
+              
+                        </tr>
+                    </thead>
+                    <tbody  class="list">
+           
+                        {% for hayvan in hayvanlar %}
+                        <tr>
+                            <td class="kupe">{{hayvan.KupeNo }}</td>
+                            <td class="agirlik">{{hayvan.Agirlik}}</td>
+                            <td><button type="button"  class="HayvanBilgisiIDShow show btn btn-info btn-sm" value="{{hayvan.ID}}">  Seçimi Yap</button></td>
+                        </tr>
+                         {% endfor %}
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+</div>
+    
+                              <!-- <div class="form-group">
+                                    <label for="HayvanBilgisiID">Hayvanlar </label>
+    
+                                    <select class="form-control"  name="HayvanBilgisiID" id="HayvanBilgisiID">
+                                        {% for hayvan in hayvanlar %}
+                                           <option  value="{{hayvan.ID}}">Küpe: {{hayvan.KupeNo}} / {{hayvan.Agirlik}} KG</option>
+                                        {% endfor %}
+                                    </select>
+                                </div>  -->
+    
+    
+                                <script id="cartSelectItemsTpl" type="text/x-handlebars-template">
+                                    {% verbatim %}
+                                        <ul class="list-group">
+                                        <li class="list-group-item active">Hayvan Bilgileri</li>
+                                        <li class="list-group-item list-group-item-action"><strong>Ağırlık:</strong> {{jsonData.agirlik}} KG</li>
+                                        <li class="list-group-item list-group-item-action"><strong>Küpe NO :</strong>{{jsonData.kupeNo}} </li>
+                                        <li class="list-group-item list-group-item-action"><strong>Satın alındığı Ahır :</strong>{{jsonData.hayvanSatisYerleri.yer_adi}} </li>
+                                        <li class="list-group-item list-group-item-action"><strong style="background-color: black;color:white;padding: 5px;">Bu hesaplamalar ayarlardaki hissedar sayısına göre hesaplanmıştır.</strong> </li>
+                                        <li class="list-group-item list-group-item-action ll1">
+                                          <div class="row">
+    
+                                                <div class="col-md-10">
+                                                    <strong>Satış Fiyatı 1 e göre fiyatı: </strong>
+                                                    {{jsonData.satisFiyati1}} TL x  {{jsonData.agirlik}} KG =  {{jsonData.fiyat1}} TL<br> <small>kişi başı düşen fiyat: {{jsonData.kisiBasiDusen1}} TL</small>
+                                                    <br>
+                                                    <small style="background-color: black;color:red;padding: 5px"> Hangi fiyatı kullanacağınızı seçim yapmazsanız bu fiyat üzerinden kayıt edilir.</small>
+                                                </div>
+    
+                                            <div class="col-md-2">
+                                                <button class="btn btn-sm btn-primary fiyatBtn"  satisfiyati="{{jsonData.satisFiyati1}}"   satisfiyatturu="1" value="{{jsonData.fiyat1}}" agirlik="{{jsonData.agirlik}}" type="button" aria-pressed="true">Bu Fiyatı Kullanmak için tıklayınız</button>
+                                            </div>
+    
+                                          </div>
+                                            
+                                            </li>
+                                        <li class="list-group-item list-group-item-action ll2">
+                                        
+                                                <div class="row">
+                                                    <div class="col-md-10">  <strong>Satış Fiyatı 2 e göre fiyatı: </strong>
+                                                        {{jsonData.satisFiyati2}} TL x  {{jsonData.agirlik}} KG =  {{jsonData.fiyat2}} TL<br> <small>kişi başı düşen fiyat: {{jsonData.kisiBasiDusen2}} TL</small></div>
+                                                        <div class="col-md-2">
+                                                            <button class="btn btn-sm btn-primary fiyatBtn"  satisfiyati="{{jsonData.satisFiyati2}}" satisfiyatturu="2" value="{{jsonData.fiyat2}}" agirlik="{{jsonData.agirlik}}" type="button" aria-pressed="true">Bu Fiyatı Kullanmak için tıklayınız</button>
+                                                        </div>
+                                                </div>
+                                            
+                                            
+                                            </li>
+                                        <li class="list-group-item list-group-item-action ll3">
+                                            
+                                            
+                                            <div class="row">
+                                                <div class="col-md-10">  <strong>Satış Fiyatı 3 e göre fiyatı: </strong>
+                                                    {{jsonData.satisFiyati3}} TL x  {{jsonData.agirlik}} KG =  {{jsonData.fiyat3}} TL<br> <small>kişi başı düşen fiyat: {{jsonData.kisiBasiDusen3}} TL</small></div>
+                                                    <div class="col-md-2">
+                                                        <button class="btn btn-sm btn-primary fiyatBtn" satisfiyati="{{jsonData.satisFiyati3}}" satisfiyatturu="3" value="{{jsonData.fiyat3}}" agirlik="{{jsonData.agirlik}}" type="button" aria-pressed="true">Bu Fiyatı Kullanmak için tıklayınız</button>
+                                                    </div>
+                                            </div>
+                                                
+                                                </li>
+                                        <li class="list-group-item list-group-item-action"><strong>Ahır Sahibi / Tel  :</strong>
+                                                {{jsonData.hayvanSatisYerleri.ilgiliKisi}} / {{jsonData.hayvanSatisYerleri.telefon}}   </li>
+    
+                                                <li class="list-group-item list-group-item-action"> <a href=/admin/hayvanBilgisi/edit/{{jsonData.id}}>Hayvan Bilgisini Düzenle</a>  </li>        
+                                       </ul> 
+                                   {% endverbatim %}
+                                </script>
+                                <div id="cartSelectItems" class="card-body-"></div>
+    
+                     
+    
+                         
+    
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        
+
+            <div class="col-md-6">
+                <div class="card">
+                    <div class="card-header"> <strong>
+                       Kaynak Grup
+                        </strong>
+                        <small>verilerinin aktarılmasını istediğiniz grup</small>
+    
+                    </div>
+                    <div class="card-body">
+        
+
+                        <div class="form-group">
+                            <label for="AgirlikTipi">Ağırlık türünü seç</label>
+                            <select  class="form-control" name="AgirlikTipi" id="AgirlikTipi">
+                                <option value="">Seçiniz</option>
+                                <option value="1">Küçük Ağırlık</option>
+                                <option value="2">Orta Ağırlık</option>
+                                <option value="3">Büyük Ağırlık</option>
+                            </select>
+                        </div>
+
+                        <div class="form-group">
+                            <label for="GrupBilgisiIDSource">grup bilgileri</label>
+    
+                            <select class="form-control" disabled name="GrupBilgisiIDSource" id="GrupBilgisiIDSource">
+                               
+                                    <option value="0">Lütfen ağırlık türü seçiniz  </option>
+                            
+                            </select>
+    
+    
+    
+
+                        </div>
+
+
+                        <script class="cartSelectItemsTargetTpl" type="text/x-handlebars-template">
+                            {% verbatim %}
+                                <ul class="list-group">
+
+                                    <li class="list-group-item active">Grup Bilgileri</li>
+                                    <li class="list-group-item list-group-item-action "><strong>Grup Adı:</strong> {{jsonData.grup_adi}} </li>
+                                    <li class="list-group-item list-group-item-action list-group-item-info"><strong>Kesim Sıra Numarası:</strong> {{jsonData.KesimSiraNo}} </li>
+                                  
+                                    <li class="list-group-item list-group-item-action"><strong> Kurban Fiyati:</strong> {{numberFormat jsonData.ToplamKurbanFiyati thousandsSep="." decimalSep=","}}  </li>
+                                    <li class="list-group-item list-group-item-action list-group-item-info"><strong>Hissedar Adeti:</strong> {{jsonData.HissedarAdet}} </li>
+                                    <li class="list-group-item list-group-item-action"><strong>Kilo :</strong>{{jsonData.Agirlik}} </li>
+                                    <li class="list-group-item active">Hissedar Bilgileri</li>
+                            
+                                        
+                                
+                                    <li class="list-group-item list-group-item-action "><strong>Kişi Başı Kurban Fiyatı :</strong>{{jsonData.Kurban.0.KurbanFiyati }} </li>
+                                    <li class="list-group-item list-group-item-action list-group-item-info"><strong>Kişi Başı Düşen Kilo :</strong>{{jsonData.Kurban.0.Agirlik }} </li>
+
+                                    {{#each jsonData.Kurban}}
+
+                                            {{#if_eq adSoyad ""}}
+                                                <li class="list-group-item list-group-item-action"><strong>  #{{counter @index}} - Adı Soyadı  :</strong>  
+                                                    <small style="color:green">Kimse atanmamış </small> 
+                                                    <a target="_blank" href="/admin/kurban/edit/{{id}}">Atamak için tıklatın </a> 
+                                                    <br>
+                                                     <strong>Telefon :</strong> {{tel}} 
+                                                     <br>
+                                            
+                                                  
+                                                       <strong>Toplam Kapora Ödemeleri: {{Bakiye}} TL</strong>
+                                                 
+                                                     <br>
+                                                     <a target="_blank" href="/admin/kurban/edit/{{id}}">Bilgilerini göster </a> 
+                                                </li>
+                                            {{else}}
+                                                <li class="list-group-item list-group-item-action"><strong>  
+                                               
+
+                                                    #{{counter @index}} - Adı Soyadı  :</strong>{{adSoyad}} 
+                                                    <br>
+                                                     <strong>Telefon :</strong> {{tel}} 
+                                                     <br>
+                                                     <strong>Toplam Kapora Ödemeleri: {{Bakiye}} TL</strong>
+                                                     <br>
+                                                     <a target="_blank" href="/admin/kurban/edit/{{id}}">Bilgilerini göster </a> 
+                                                    </li>
+                                            {{/if_eq}}
+
+                                    {{/each}}
+                     
+
+                               </ul>
+                      
+                           {% endverbatim %}
+                        </script>
+
+                         <div class="cartSelectItemsTarget" class="card-body-"></div>
+    
+                   
+    
+    
+    
+                    </div>
+                </div>
+
+
+                <div class="col-md-12">
+                    <div class="card">
+                        <div class="card-body">
+            
+                            <button class="btn btn-sm btn-primary" value="kaydet" name="kaydet" type="submit">Kaydet ve
+                                düzenle </button>
+                            <br>
+                            <br>
+                            <button class="btn btn-sm btn-success" value="yeniEkle" name="kaydet" type="submit">Kaydet
+                                ve Yeni Ekle</button>
+            
+                        </div>
+                    </div>
+                </div>
+            </div>
+    
+
+        {% endif %}
+    </div>
+
+</form>
+
+
+{% endblock %}
+{% block jsInline %}
+<!-- <link href="//cdnjs.cloudflare.com/ajax/libs/font-awesome/5.13.0/css/all.min.css" rel="stylesheet" /> -->
+
+<script src="/assets/admin/js/handlebars.min-v4.7.7.js"></script>
+<script src="/assets/admin/js/handleBarHelpers.js"></script>
+
+
+<script src="/assets/admin/js/tooltips.js"></script>
+
+<!-- <script src="https://unpkg.com/isotope-layout@3/dist/isotope.pkgd.min.js"></script> -->
+<script src="/assets/admin/js/list.min.js"></script>
+<!-- <script src="https://cdnjs.cloudflare.com/ajax/libs/list.js/1.5.0/list.min.js"></script> -->
+<script type="text/javascript">
+
+
+
+
+    $(document).ready(function () {
+
+        // let id = $("#HayvanBilgisiID").val()
+        // hayvanListeAjax(id)
+
+
+        $(document).on("click", ".fiyatBtn", function () {
+            event.preventDefault();
+            $(".ll1").css({ "backgroundColor": "#fff", "color": "black" });
+            $(".ll2").css({ "backgroundColor": "#fff", "color": "black" });
+            $(".ll3").css({ "backgroundColor": "#fff", "color": "black" });
+            $(".ll"+$(this).attr("satisfiyatturu")).css({ "backgroundColor": "black", "color": "white" });
+            $("#ToplamKurbanFiyati").val($(this).val())
+            $("#SatisFiyatTuru").val($(this).attr("satisfiyatturu"))
+            $("#Agirlik").val($(this).attr("agirlik"))
+            $("#SatisFiyati").val($(this).attr("satisfiyati"))
+        });
+
+
+        $('#AgirlikTipi').change(function () {
+            // alert(this.value);
+            $("#GrupBilgisiIDSource").attr("disabled", false);
+            gruplarListeAjax(this.value)
+        });
+
+
+        
+        // $('#HayvanBilgisiID').change(function () {
+        //     hayvanListeAjax(this.value)
+        // });
+
+
+        $(document).on('click', '.HayvanBilgisiIDShow', function (e) {
+            $("#HayvanBilgisiID").val(this.value)
+            hayvanListeAjax(this.value)
+        });       
+        
+        $('#GrupBilgisiIDSource').change(function () {
+            ajaxCall(this.value)
+        });
+
+
+
+    });
+
+    function hayvanListeAjax(id) {
+        fetch("/admin/hayvanBilgisi/hayvanListeAjax/" + id, {
+            method: 'GET',
+            headers: { 'X-Requested-With': 'XMLHttpRequest' }
+        })
+            .then(response => {
+                if (response.ok) {
+                    return response.json()
+                } else {
+                    console.log("error")
+                }
+            })
+            .then(data => {
+                console.log(data)
+                jQuery('#cartSelectItems').empty();
+                let cartSelectTemplate = jQuery('#cartSelectItemsTpl').html();
+                let TemplateCompileCartSelect = Handlebars.compile(cartSelectTemplate);
+                let CompiledHtmlCartSelect = TemplateCompileCartSelect(data);
+                jQuery('#cartSelectItems').html(CompiledHtmlCartSelect);
+
+                $("#ToplamKurbanFiyati").val(data.jsonData.fiyat1)   
+                $("#SatisFiyati").val(data.jsonData.satisFiyati1)   
+                $("#Agirlik").val(data.jsonData.agirlik)
+               
+                $("#SatisFiyatTuru").val(1)
+
+             
+            })
+            .catch((error) => {
+                console.log("error")
+            });
+    }
+
+
+
+    function gruplarListeAjax(id) {
+        fetch("/admin/gruplar/gruplarListeAjaxAgirlikTuru/" + id, {
+            method: 'GET',
+            headers: { 'X-Requested-With': 'XMLHttpRequest' }
+        })
+            .then(response => {
+                if (response.ok) {
+                    return response.json()
+                } else {
+                    console.log("error")
+                }
+            })
+            .then(data => {
+          
+               jQuery('#GrupBilgisiIDSource').empty();
+
+                    if (data.jsonData.length<=0){
+                        jQuery('.cartSelectItemsTarget').empty();
+                        $("#GrupBilgisiIDSource").attr("disabled", true);
+                      
+
+                        toastr.options = {
+                            "closeButton": true,
+                            "debug": false,
+                            "newestOnTop": false,
+                            "progressBar": true,
+                            "positionClass": "toast-top-center",
+                            "preventDuplicates": false,
+                            "onclick": null,
+                            "showDuration": "300",
+                            "hideDuration": "1000",
+                            "timeOut": "5000",
+                            "extendedTimeOut": "1000",
+                            "showEasing": "swing",
+                            "hideEasing": "linear",
+                            "showMethod": "fadeIn",
+                            "hideMethod": "fadeOut"
+                          }
+                          toastr["error"]("Bu seçimde grup bulunamadı")
+                    }
+
+                $.each(data.jsonData, function(index, value){
+                    var row="";
+                        row +='<option value="'+value.id+'"> Kesim Sıra No: '+value.KesimSiraNo+' / Grup Adı: '+value.grup_adi+' </option>';
+                        $("#GrupBilgisiIDSource").append(row);
+                });
+
+                ajaxCall(data.jsonData[0].id)
+            })
+            .catch((error) => {
+                console.log("error")
+            });
+    }
+
+    function ajaxCall(id) {
+        fetch("/admin/gruplar/GrupBilgisiHayvanBosOlanlarAPI/" + id, {
+            method: 'GET',
+            headers: { 'X-Requested-With': 'XMLHttpRequest' }
+        })
+            .then(response => {
+                if (response.ok) {
+                    return response.json()
+                } else {
+                    console.log("error")
+                }
+            })
+            .then(data => {
+                console.log("data")
+                console.log(data)
+                jQuery('.cartSelectItemsTarget').empty();
+                let cartSelectTemplate = jQuery('.cartSelectItemsTargetTpl').html();
+                let TemplateCompileCartSelect = Handlebars.compile(cartSelectTemplate);
+                let CompiledHtmlCartSelect = TemplateCompileCartSelect(data);
+                jQuery('.cartSelectItemsTarget').html(CompiledHtmlCartSelect);
+
+            })
+            .catch((error) => {
+                console.log("error")
+            });
+    }
+
+////// hhhhhh ////
+
+
+var options = {
+        valueNames: ['kupe', 'agirlik']
+    };
+
+    var myList = new List('myList', options);
+
+    var noItems = $('<div class="item" id="no-items-found">Aradığınız kişi bulunamadı</div>');
+
+    myList.on('updated', function (list) {
+        if (list.matchingItems.length == 0) {
+            $(list.list).append(noItems);
+            $('.theachShow').hide();
+
+        } else {
+            noItems.detach();
+            $('.theachShow').show();
+            $('.stnc-table').show();
+
+        }
+    });
+
+    myList.on('searchComplete', function (list) {
+        if ($('input.search').val() == '') {
+            list.visibleItems.forEach(i => i.hide())
+            $('.theachShow').hide();
+        }
+    }).trigger('searchComplete')
+
+   // setTimeout(function () {
+   //     $('input.search').focus();
+   // }, 250);
+
+
+
+
+
+
+    // bind filter button click
+    $('#myList .list').on('click', 'button', function () {
+        var filterValue = $(this).attr('data-filter');
+        filterValue = filterValue;
+ 
+    });
+
+    $('.CustomClear').on('click', function () {
+        var filterValue = "*";
+        filterValue = filterValue;
+
+        $("#myList input.search").val("");
+        myList.on('searchComplete', function (list) {
+            if ($('input.search').val() == '') {
+                list.visibleItems.forEach(i => i.hide())
+            }
+        }).trigger('searchComplete')
+        $('.theachShow').hide();
+        noItems.detach();
+    });
+
+    $('.allitems').on('click', function(){
+        myList.page = myList.size();
+        myList.update();
+        $('.theachShow').show();
+       $('.stnc-table').show();
+    })
+
+</script>
+{% endblock %}
+
+

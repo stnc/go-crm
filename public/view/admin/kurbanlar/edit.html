@@ -1,0 +1,278 @@
+{% extends "../app.html" %}
+{% block content %}
+{% set RootName = 'admin-kurban' %}
+{% set routerName ='admin/kurban' %}
+
+
+
+
+
+{% if post.KurbanFiyati == -1.000000 %}
+<div class="row">
+    <div class="col-12 col-lg-12">
+        <div class="alert alert-danger" role="alert">Henüz hayvan atanmamıştır</div>
+    </div>
+</div>
+{% endif %}
+
+
+<div class="row">
+    <div class="col-6 col-lg-3">
+        <div class="card">
+            <div class="card-body p-3 d-flex align-items-center">
+                <div class="bg-gradient-warning   p-3 mfe-3">
+                    <svg class="c-icon c-icon-xl">
+                        <use xlink:href="/assets/admin/vendors/@coreui/icons/svg/free.svg#cil-settings"></use>
+                    </svg>
+                </div>
+                <div>
+                    <div class="text-value text-primary">
+                        <a href="/admin/kisiler/edit/{{ post.KisiID}}"> {{kisiBilgileri.AdSoyad}} </a>
+
+                        <br>
+                        {% if post.KurbanFiyati == -1.000000 %}
+                        <code class="text-muted- highlighter-rouge"> Henüz hayvan atanmamıştır</code>
+                        {% else %}
+                        <code class="text-muted- highlighter-rouge">{{ post.KurbanFiyati|stringformat:"%.2f"}} TL</code>
+                        {% endif %}
+                    </div>
+                    <div class="text-muted text-uppercase font-weight-bold small">
+                        {% if post.KurbanTuru==12 || post.KurbanTuru==11 %}
+                        <span>Hisseli Büyükbaş </span>
+                        {% elif post.KurbanTuru==8 %}
+                        <span>Kurban Bayramı Küçükbaş </span>
+                        {% elif post.KurbanTuru==9 %}
+                        <span>kurban bayramı küçükbaş </span>
+                        {% elif post.KurbanTuru==1 %}
+                        <span>Adak </span>
+                        {% elif post.KurbanTuru==2 %}
+                        <span>Akika </span>
+                        {% elif post.KurbanTuru==3 %}
+                        <span>Şükür </span>
+                        {% elif post.KurbanTuru==4 %}
+                        <span>SAHİBİNİN NİYETİNE</span>
+                        {% elif post.KurbanTuru==5 %}
+                        <span>Hayır</span>
+                        {% elif post.KurbanTuru==6 %}
+                        <span>Nafile</span>
+                        {% elif post.KurbanTuru==7 %}
+                        <span>Nafile</span>
+                        {% endif %}
+
+
+
+                    </div>
+                </div>
+            </div>
+            <div class="card-footer px-3 py-2"><a
+                    class="btn-block text-muted d-flex justify-content-between align-items-center"
+                    href=" /admin/grup/{{post.GrupID}} "><span class="small font-weight-bold">Grubunu Göster</span>
+                    <svg class="c-icon">
+                        <use xlink:href="/assets/admin/vendors/@coreui/icons/svg/free.svg#cil-chevron-right"></use>
+                    </svg></a></div>
+        </div>
+    </div>
+
+
+    <div class="col-6 col-lg-9">
+        <div class="row">
+            <div class="col-6 col-lg-4">
+                <div class="card overflow-hidden">
+                    <div class="card-body p-0 d-flex align-items-center">
+                        <div class="bg-gradient-primary py-4 px-5 mfe-3">
+                            <svg class="c-icon c-icon-xl">
+                                <use xlink:href="/assets/admin/vendors/@coreui/icons/svg/free.svg#cil-settings"></use>
+                            </svg>
+                        </div>
+                        <div>
+                            <div class="text-value text-primary">{{kurbanOdenenMiktar|stringformat:"%.2f"}} TL </div>
+                            <div class="text-muted text-uppercase font-weight-bold small">Toplam Ödemeleri</div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="col-6 col-lg-4">
+                <div class="card overflow-hidden">
+                    <div class="card-body p-0 d-flex align-items-center">
+                        <div class="bg-gradient-danger py-4 px-5 mfe-3">
+                            <svg class="c-icon c-icon-xl">
+                                <use xlink:href="/assets/admin/vendors/@coreui/icons/svg/free.svg#cil-settings"></use>
+                            </svg>
+                        </div>
+                        <div>
+
+
+                            <div class="text-value text-danger">{{kurbanSonKalanBorc|stringformat:"%.2f"}} TL</div>
+                            <div class="text-muted text-uppercase font-weight-bold small">Kalan Borçu</div>
+                            {% if ucretOdemesiDurumu %}
+                            <div class="alert alert-success" style="font-size: 12px;  padding: 0px;" role="alert">Ödeme
+                                Tamamlandı/Borcu Yoktur </div>
+                            {% endif %}
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+
+            <div class="col-6 col-lg-4">
+                {% if post.KisiID != 1 %}
+                {% if ucretOdemesiDurumu || !hayvanAtanmasi || post.AdSoyad != "" %}
+                <button class="btn btn-success mb-1" type="button" onclick='odemeEkleAjaxRequest( event,"{{post.ID}}")'>
+                    <i class="c-icon c-icon-2xl mt-2 mb-2 cil-money"></i> Ödeme Ekle
+                </button>
+                {% endif %}
+                {% else %}
+                <div style="color: brown; font-size:large"> !!!! Ödeme Eklemek İçin Ad Soyad ve Telefon Bilgilerini
+                    Giriniz
+                </div>
+                {% endif %}
+                <!-- <div class="card overflow-hidden">
+            <div class="card-body p-0 d-flex align-items-center">
+                <div class="bg-gradient-warning py-4 px-5 mfe-3">
+                    <svg class="c-icon c-icon-xl">
+                        <use xlink:href="/assets/admin/vendors/@coreui/icons/svg/free.svg#cil-settings"></use>
+                    </svg>
+                </div>
+                <div>
+                    <div class="text-value text-warning"></div>
+                    <div class="text-muted text-uppercase font-weight-bold small">
+
+                   sds
+
+                    </div>
+                </div>
+            </div>
+        </div> -->
+            </div>
+            {% if durum== "Kasa Borçlu" %}
+            <div class="col-6 col-lg-12">
+                <code class="text-muted- highlighter-rouge" style="font-size: 17px;"> Kasa Borçlandı: <span> {{ kasaBorcu|stringformat:"%.2f"}} TL</span></code>
+            </div>
+            {% endif %}
+        </div>
+    </div>
+
+
+
+</div>
+
+<div class="row">
+    <div class="col-12 col-lg-12">
+
+
+
+
+        <div class="card">
+            <div class="card-body">
+                <div class="card-header">
+                    <strong>Sıra No: {{ grupData.KesimSiraNo}}</strong> <small class="alert alert-success">||</small>
+                    <strong>Grup Adı: {{ grupData.GrupAdi}}</strong> <small class="alert alert-success">||</small>
+                    <strong>Hissedar Adet: {{ grupData.HissedarAdet}}</strong> <small
+                        class="alert alert-success">||</small>
+                    <strong>Toplam Kurban Fiyati: {{ grupData.ToplamKurbanFiyati|stringformat:"%.2f"}}</strong>
+
+                </div>
+                <div class="row align-items-center">
+
+                    <div class="col-6 col-sm-4 col-md-2 col-xl mb-3 mb-xl-0">
+                        {% if lastID!=0 %}
+                        <a class="btn btn-block btn-primary" href="/admin/kurban/edit/{{lastID}}">Önceki Kurban</a>
+                        {% endif %}
+                    </div>
+                    <div class="col-6 col-sm-4 col-md-2 col-xl mb-3 mb-xl-0">
+                        {% if nextID!=0 %}
+                        <a class="btn btn-block btn-danger" href="/admin/kurban/edit/{{nextID}}">Sonraki Kurban</a>
+                        {% endif %}
+                    </div>
+
+                </div>
+
+            </div>
+        </div>
+
+    </div>
+</div>
+<div class="row">
+    <div class="col-md-12 mb-4">
+        <ul class="nav nav-tabs" role="tablist">
+            <li class="nav-item"><a class="nav-link  {%if actionHref=='ekle' %}  active  {% endif %}" data-toggle="tab"
+                    href="#ekle" role="tab" aria-controls="ekle" aria-selected="true">
+                    <svg class="c-icon">
+                        <use xlink:href="/assets/admin/vendors/@coreui/icons/svg/free.svg#cil-calculator"></use>
+                    </svg> Kurban Düzenleme </a></li>
+
+
+
+            <li class="nav-item"><a class="nav-link  {%if actionHref=='odemelerList' %}  active  {% endif %}"
+                    data-toggle="tab" href="#odemelerList" role="tab" aria-controls="odemelerList"
+                    aria-selected="false">
+                    <svg class="c-icon">
+                        <use xlink:href="/assets/admin/vendors/@coreui/icons/svg/free.svg#cil-chart-pie"></use>
+                    </svg> Ödemeler / Muhasebe</a></li>
+
+
+            <li class="nav-item"><a class="nav-link  {%if actionHref=='uploader' %}  active  {% endif %} "
+                    data-toggle="tab" href="#uploader" role="tab" aria-controls="uploader" aria-selected="false">
+                    <svg class="c-icon">
+                        <use xlink:href="/assets/admin/vendors/@coreui/icons/svg/free.svg#cil-filter-photo"></use>
+                    </svg> Resim Yönetimi
+                </a></li>
+
+        </ul>
+        <div class="tab-content">
+            <div class="tab-pane   {%if actionHref=='ekle' %}  active  {% endif %}" id="ekle" role="tabpanel">
+                {% include "kurbanEditInclude.html"%}
+
+            </div>
+            <div class="tab-pane   {%if actionHref=='uploader' %}  active  {% endif %}" id="uploader" role="tabpanel">
+                {% include "../viewComponents/uploader/uploadImage.html"%}
+                {%if post.KurbanTuru!=12 %}
+                {% include "../viewComponents/uploader/uploader.html"%}
+                {% endif %}
+
+            </div>
+            <div class="tab-pane   {%if actionHref=='odemelerList' %}  active  {% endif %}" id="odemelerList"
+                role="tabpanel">
+                {% include "odemeler.html"%}
+            </div>
+        </div>
+    </div>
+</div>
+
+{% endblock %}
+
+
+
+
+
+
+
+{% block jsInline %}
+
+<script src="/assets/admin/js/jquery.validate.min.js"></script>
+<script src="/assets/admin/js/jquery.mask.min.js"></script>
+<script src="/assets/admin/js/bootstrap-select.min.js"></script>
+<script src="/assets/admin/js/ajax-bootstrap-select.min.js"></script>
+<script src="/assets/admin/js/eModal.min.js"></script>
+<script src="/assets/admin/js/tooltips.js"></script>
+
+
+
+
+{%if post.KurbanTuru!=12 %}
+{% include "../viewComponents/uploader/uploaderJsDropzone.html"%}
+{% include "../viewComponents/uploader/uploaderJsImage.html"%}
+{% else %}
+{% include "../viewComponents/uploader/uploaderJsImage.html"%}
+{% endif %}
+
+
+{% include "kurbanlarJS.html"%}
+
+
+{% include "../viewComponents/alertMsgJS.html"%}
+
+
+
+{% endblock %}

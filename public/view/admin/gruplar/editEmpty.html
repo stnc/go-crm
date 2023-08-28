@@ -1,0 +1,183 @@
+{% extends "../app.html" %}
+{% block content %}
+{% set RootName = 'admin-gruplar' %}
+{% set routerName = 'admin/gruplar' %}
+
+
+
+{% include "../viewComponents/alertMsg.html"%}
+
+
+
+<form method="POST" action="/{{routerName}}/update" accept-charset="UTF-8" class="form-control1" id="{{RootName}}-store"
+    enctype="multipart/form-data">
+    <input name="Siralama" type="hidden" value="1">
+    <input name="sender" type="hidden" value="empty">
+    <input name="_csrf" type="hidden" value="{{ csrf }}">
+    <input name="_method" type="hidden" value="PUT">
+    <input id="ID" name="ID" value="{{post.ID}}" type="hidden">
+    <input id="HayvanBilgisiID" name="HayvanBilgisiID" value="0" type="hidden">
+    <input id="ToplamKurbanFiyati" name="ToplamKurbanFiyati" value="1" type="hidden">
+    <input type="hidden" value="0" id="SatisFiyatTuru" name="SatisFiyatTuru">
+    <div class="row">
+
+        <div class="col-md-6">
+            <div class="card">
+                <div class="card-header">
+                    <strong>
+                        {% if title %} {{ title }} - 
+                        {% else %} STNC OTOMASYON SİSTEMi
+                        {% endif %}
+                    </strong>
+                    <small>Form</small>
+                </div>
+                <div class="card-body">
+
+                    <div class="form-group">
+                        <label for="KesimSiraNo">Kesim Sira No</label>
+                        <input class="form-control {{err.KesimSiraNo_valid}}" id="KesimSiraNo" name="KesimSiraNo"
+                            readonly value="{{post.KesimSiraNo}}" type="text">
+                        {% if err.KesimSiraNo_error %}
+                        <div class="invalid-feedback" style="display:block">{{err.KesimSiraNo}}</div>
+                        {% endif %}
+                    </div>
+
+                    <div class="form-group">
+                        <label for="GrupAdi">Grup Adı  [ Örnek: Erdoğdu Ailesi ]</label>
+                        <input class="form-control {{err.GrupAdi_valid}}" id="GrupAdi"
+                            name="GrupAdi"  value="{{post.GrupAdi}}" type="text">
+                        {% if err.GrupAdi_error %}
+                        <div class="invalid-feedback" style="display:block">{{err.GrupAdi}}</div>
+                        {% endif %}
+                    </div>
+
+
+                    <div class="form-group">
+                        <label for="AgirlikTipi">Ağırlık Tipi</label>
+                        <select class="form-control" name="AgirlikTipi" id="AgirlikTipi">
+                            <option {%if post.AgirlikTipi==0 %} selected {% endif %} value="0">Henüz Belli
+                                Değil
+                            </option>
+                            <option {%if post.AgirlikTipi==1 %} selected {% endif %} value="1">Küçük Ağırlık
+                            </option>
+                            <option {%if post.AgirlikTipi==2 %} selected {% endif %} value="2">Orta Ağırlık
+                            </option>
+                            <option {%if post.AgirlikTipi==3 %} selected {% endif %} value="3">Büyük Ağırlık
+                            </option>
+                        </select>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="HissedarAdet">Hissedar Adeti</label>
+                        <input class="form-control {{err.HissedarAdet_valid}}" id="HissedarAdet" name="HissedarAdet"
+                            readonly value="{{hisseAdeti}}" type="text">
+                        {% if err.HisseFiyati_error %}
+                        <div class="invalid-feedback" style="display:block">{{err.HissedarAdet}}</div>
+                        {% endif %}
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="col-md-3">
+            <div class="card">
+                <div class="card-header"> <strong>Diğer Bilgiler</strong>
+                </div>
+                <div class="card-body">
+                    <div class="form-group">
+                        <label for="Aciklama">Kısa açıklama</label>
+                        <textarea class="form-control {{err.Aciklama_valid}}" id="Aciklama" name="Aciklama"
+                            rows="9">{{ post.Aciklama }}</textarea>
+                    </div>
+                    <div class="form-group">
+                        <label for="KurbanBayramiYili">Kurban Bayrami Yili</label>
+                        <input class="form-control {{err.KurbanBayramiYili_valid}}" id="KurbanBayramiYili" readonly
+                            name="KurbanBayramiYili" value="{{kurbanYili}}" type="text">
+                        {% if err.KurbanBayramiYili_error %}
+                        <div class="invalid-feedback" style="display:block">{{err.KurbanBayramiYili}}</div>
+                        {% endif %}
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="col-md-3">
+            <div class="row">
+                <div class="col-md-12">
+                    <div class="card">
+                        <div class="card-header"> <strong>Bu kurbana Kayıtlı Kişiler </strong>
+                        </div>
+                        <div class="card-body"></div>
+                    </div>
+                </div>
+                <div class="col-md-12">
+                    <div class="card">
+                        <div class="card-body">
+                            <input class="form-control {{err.ID}}" id="ID" name="ID" value="{{post.ID}}" type="hidden">
+                            <button class="btn btn-sm btn-primary" type="submit">Kaydet</button>
+                            <button class="btn btn-sm btn-danger" type="reset">VAZGEÇ</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+    </div>
+
+</form>
+{% endblock %}
+
+{% block jsInline %}
+<!-- <link href="//cdnjs.cloudflare.com/ajax/libs/font-awesome/5.13.0/css/all.min.css" rel="stylesheet" /> -->
+
+<script src="/assets/admin/js/handlebars.min-v4.7.7.js"></script>
+<script type="text/javascript">
+    $(document).ready(function () {
+
+        let id = $("#HayvanBilgisiID").val()
+        ajaxCall(id)
+
+        $(document).on("click", ".fiyatBtn", function () {
+            event.preventDefault();
+            $("#ToplamKurbanFiyati").val($(this).val())
+            $("#AgirlikTipi").val($(this).attr("tipi"))
+            $("#Agirlik").val($(this).attr("Agirlik"))
+        });
+
+        $('#HayvanBilgisiID').change(function () {
+            ajaxCall(this.value)
+        });
+    });
+
+    function ajaxCall(id) {
+        fetch("/admin/hayvanBilgisi/hayvanListeAjax/" + id, {
+            method: 'GET',
+            headers: { 'X-Requested-With': 'XMLHttpRequest' }
+        })
+            .then(response => {
+                if (response.ok) {
+                    return response.json()
+                } else {
+                    console.log("error")
+                }
+            })
+            .then(data => {
+
+                console.log(data)
+                jQuery('#cartSelectItems').empty();
+                let cartSelectTemplate = jQuery('#cartSelectItemsTpl').html();
+                let TemplateCompileCartSelect = Handlebars.compile(cartSelectTemplate);
+                let CompiledHtmlCartSelect = TemplateCompileCartSelect(data);
+                jQuery('#cartSelectItems').html(CompiledHtmlCartSelect);
+                $("#ToplamKurbanFiyati").val(jsonData.post.fiyat1)
+
+                $("#AgirlikTipi").val(jsonData.post.kurban_fiyati_agirlik_tipi)
+                
+
+            })
+            .catch((error) => {
+                console.log("error")
+            });
+    }
+</script>
+{% endblock %}

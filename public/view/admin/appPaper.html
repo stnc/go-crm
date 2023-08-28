@@ -1,0 +1,28 @@
+<!DOCTYPE html>
+<!--
+* CoreUI - Free Bootstrap Admin Template
+* @version v3.2.0
+* @link https://coreui.io
+* Copyright (c) 2020 creativeLabs Łukasz Holeczek
+* Licensed under MIT (https://coreui.io/license)
+-->
+<html lang="en">
+  <head>
+    {% include "header.html" %}
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/normalize/7.0.0/normalize.min.css">
+
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/paper-css/0.4.1/paper.css">
+    <style>@page { size: A4  }</style>
+
+  </head>
+  <body class="A51 landscape1 ">
+
+        
+    {% block content %}{% endblock %}
+         
+ 
+    {% include "footerJSfiles.html" %}
+    {% block jsInline %}{% endblock %}
+
+  </body>
+</html>

@@ -1,0 +1,83 @@
+
+<div class="row">
+    <div class="col-lg-12">
+        <div class="card">
+            {% if  post.Kurbanlar %} <div class="card-header"><i class="fa fa-align-justify"></i> Kişi List</div>   {% endif %} 
+            <div class="card-body">
+             {% if  post.Kurbanlar %}
+                 <table class="table table-responsive-sm table-bordered">
+                    <thead>
+                        <tr>
+                     
+                            <th>Kurban Fiyati</th>
+                            <th>Ödemeler Toplamı</th>
+                            <th>Kalan Borcu</th>
+                            <th>Kasa Borcu</th>
+                            <th>Kurban Türü</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+
+
+                        {% for list2 in post.Kurbanlar %}
+
+                        <tr>
+                          
+                            <td>
+                           
+                                   {{list2.KurbanFiyati|stringformat:"%.2f" }}  TL
+                            
+                               </td>
+                            <td>{{list2.Bakiye|stringformat:"%.2f" }}</td>
+                            <td>{{list2.Borc|stringformat:"%.2f" }}</td>
+                            <td>{{list2.Alacak|stringformat:"%.2f" }}</td>
+                            <td>
+                                {% if  list2.KurbanTuru==12 || list2.KurbanTuru==11  %} 
+                                    <span>Hisseli Büyükbaş </span> 
+                               {% elif  list2.KurbanTuru==9  %}    
+                                   <span>kurban bayramı küçükbaş </span>
+                               {% elif  list2.KurbanTuru==1   %}      
+                                  <span>Adak </span> 
+                               {% elif  list2.KurbanTuru==2 %}    
+                                  <span>Akika </span> 
+                               {% elif  list2.KurbanTuru==3  %}   
+                                  <span>Şükür </span> 
+                              {% elif  list2.KurbanTuru==4  %}     
+                                 <span>SAHİBİNİN NİYETİNE</span>   
+                              {% elif  list2.KurbanTuru==5  %}  
+                                 <span>Hayır</span>  
+                             {% elif  list2.KurbanTuru==6  %}      
+                                 <span>Nafile</span>  
+                            {% elif  list2.KurbanTuru==7  %}   
+                                <span>Nafile</span>  
+                           {% endif %}
+                           <a href="/admin/kurban/edit/{{list2.ID}}">Göster</a>
+                            </td>
+                           
+                  
+                   
+
+                            
+                        </tr>
+
+                        {% endfor %}
+
+                    </tbody>
+                </table>
+            {% else  %} 
+             
+                <div class="row">
+                    <div class="col-md-12">
+                        <div class="alert alert-warning alert-dismissible">
+                            <button type="button" class="close" data-dismiss="alert" aria-hidden="true">×</button>
+                            <span> Kurban Verisi Bulunamadı  </span>
+                        </div>
+                    </div>
+                </div>
+          {% endif %} 
+            </div>
+        </div>
+    </div>
+
+</div>
+

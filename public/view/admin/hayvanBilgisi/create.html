@@ -1,0 +1,71 @@
+{% extends "../app.html" %}
+{% block content %}
+{% set RootName = 'admin-hayvanBilgisi' %}
+{% set routerName = 'admin/hayvanBilgisi' %}
+{% include "../viewComponents/alertMsg.html"%}
+<div class="row">
+
+    <div class="col-4 col-sm-4 col-md-2  mb-3 mb-xl-0">
+        <a class="btn btn-block btn-primary" href="/admin/hayvanBilgisi">Kurbanlıklar </a>
+    </div>
+
+
+    <div class="col-4 col-sm-4 col-md-2  mb-3 mb-xl-0">
+        <a class="btn btn-block btn-primary" href="/admin/hayvanSatisYerleri">Ahırlar </a>
+    </div>
+</div>
+
+<div class="row">
+    <div class="col-md-12 mb-4">
+        <ul class="nav nav-tabs" role="tablist">
+            <li class="nav-item">
+                <a class="nav-link active" data-toggle="tab" href="#ekle" role="tab" aria-controls="ekle"
+                    aria-selected="true">
+                    <svg class="c-icon">
+                        <use xlink:href="/assets/admin/vendors/@coreui/icons/svg/free.svg#cil-calculator"></use>
+                    </svg> Hayvan Ekle
+                </a>
+            </li>
+
+
+            <li class="nav-item">
+                <a class="nav-link" data-toggle="tab" href="#uploader" role="tab" aria-controls="uploader"
+                    aria-selected="false">
+                    <svg class="c-icon">
+                        <use xlink:href="/assets/admin/vendors/@coreui/icons/svg/free.svg#cil-filter-photo"></use>
+                    </svg> Resim Yönetimi
+                </a>
+            </li>
+
+        </ul>
+        <div class="tab-content">
+            <div class="tab-pane active" id="ekle" role="tabpanel">
+                {% include "hayvanBilgisiCreateInclude.html"%}
+
+            </div>
+            <div class="tab-pane" id="uploader" role="tabpanel">
+                {% include "../viewComponents/uploader/uploaderEmpty.html"%}
+            </div>
+
+        </div>
+    </div>
+</div>
+
+{% endblock %}
+
+{% block jsInline %}
+
+<script src="/assets/admin/js/jquery.mask.min.js"></script>
+
+<script src="/assets/admin/js/tooltips.js"></script>
+{% include "../viewComponents/uploader/uploaderJsDropzone.html"%}
+{% include "../viewComponents/uploader/uploaderJsImage.html"%}
+<script type="text/javascript">
+    $(document).ready(function () {
+        $("#AlisFiyati").val($("#AlisFiyatTuru option:selected").text())
+        $("#AlisFiyatTuru").change(function () {
+            $("#AlisFiyati").val($("#AlisFiyatTuru option:selected").text())
+        });
+    });
+</script>
+{% endblock %}

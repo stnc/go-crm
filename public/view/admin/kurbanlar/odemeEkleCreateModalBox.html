@@ -1,0 +1,80 @@
+
+{% set routerName = 'admin/odemeler' %}
+
+        <form method="POST" action="/{{routerName}}/odemeEkleAjax" accept-charset="UTF-8" id="taksitOde" >
+        
+         
+                    <div class="modal-body">
+                        <input name="_csrf" type="hidden" value="{{ csrf }}">
+                        <input name="formtype" type="hidden" value="inline">
+                        <input class="form-control" id="kurbanID" name="kurbanID" value="{{kurbanID}}" type="hidden">
+                 
+                        <div class="row">
+                               <div class="col-md-6">
+                                <div class="form-group">
+                                    <label for="KurbanFiyati">Ödenecek Ücreti</label>
+                                    <input class="form-control {{err.VerilenUcret_valid}}" id="VerilenUcret" name="VerilenUcret"
+                                     value="{{kalanKurbanFiyati|stringformat:"%.2f"}}" type="text" placeholder="VerilenUcret"> 
+                                    {% if err.VerilenUcret_error %}
+                                    <div class="invalid-feedback" style="display:block">{{err.VerilenUcret}}</div>
+                                    {% endif %}
+                                </div>
+        
+                                <div class="form-group">
+                                    <label for="Makbuz">Makbuz Numarası</label>
+                                    <input class="form-control {{err.Makbuz_valid}}" id="Makbuz" name="Makbuz" value="{{post.Makbuz}}" type="text" placeholder="Makbuz"> 
+                                    {% if err.Makbuz_error %}
+                                    <div class="invalid-feedback" style="display:block">{{err.Makbuz}}</div>
+                                    {% endif %}
+                                </div>
+                                <div class="form-group">
+                                    <label for="VerildigiTarih">Verildiği Tarih</label>
+                                    <input class="form-control {{err.VerildigiTarih_valid}}" id="VerildigiTarih" name="VerildigiTarih" value="{{post.VerildigiTarih}}" type="date" placeholder="VerildigiTarih"> 
+                                    {% if err.VerildigiTarih_error %}
+                                    <div class="invalid-feedback" style="display:block">{{err.VerildigiTarih}}</div>
+                                    {% endif %}
+                                </div>
+
+                               </div> 
+
+
+                               <div class="col-md-6">
+                                <div class="form-group">
+                                    <label for="Aciklama">Açıklama</label>
+                                    <textarea  class="form-control {{err.Aciklama_valid}}" id="Aciklama" name="Aciklama" rows="9" placeholder="Açıklama...">{{post.Aciklama}}</textarea>
+        
+                                    {% if err.Aciklama_error %}
+                                    <div class="invalid-feedback" style="display:block">{{err.Aciklama}}</div>
+                                    {% endif %}
+                                </div>
+        
+                           
+                               </div> 
+
+                        </div>
+
+                    
+
+                        
+
+
+                    </div>
+                    <div class="modal-footer">
+                        <button class="btn btn-secondary" type="button" data-dismiss="modal">Kapat</button>
+                        <button class="btn btn-success" type="submit">Kaydet</button>
+                    </div>
+               
+        </form>
+
+
+
+
+<script type="text/javascript">
+    /*
+$(function() { //shorthand document.ready function
+    $('#VerilenUcret').mask('###0.00', {reverse: true});//#.##0.00 eskisi 
+});
+*/
+</script>
+
+

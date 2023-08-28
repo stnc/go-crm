@@ -1,0 +1,911 @@
+{% extends "../app.html" %}
+{% block content %}
+{% set RootName = 'admin-gruplar' %}
+{% set routerName = 'admin/gruplar' %}
+{% include "../viewComponents/alertMsg.html"%}
+
+
+<div class="row">
+    <!-- <div class="col-4 col-sm-4 col-md-2 mb-3 mb-xl-0">
+        <a class="btn btn-block btn-primary" href="/admin/gruplar/create">Yeni Grup Oluştur</a>
+  </div> -->
+    <div class="col-4 col-sm-4 col-md-2  mb-3 mb-xl-0">
+        <a class="btn btn-block btn-primary" href="/admin/gruplar/createEmpty">Boş Grup Oluştur</a>
+    </div>
+    <div class="col-4 col-sm-4 col-md-2  mb-3 mb-xl-0">
+        <a class="btn btn-block btn-primary" href="/admin/gruplar/hayvanata">Hayvan Atamaları</a>
+    </div>
+
+    <div class="col-4 col-sm-4 col-md-2  mb-3 mb-xl-0">
+        <a class="btn btn-block btn-primary" href="/admin/hayvanBilgisi/create">Kurbanlık Hayvan Ekle</a>
+    </div>
+
+
+    <div class="col-4 col-sm-4 col-md-2  mb-3 mb-xl-0">
+        <a class="btn btn-block btn-primary" href="/admin/hayvanBilgisi">Kurbanlıklar</a>
+    </div>
+
+
+    <div class="col-4 col-sm-4 col-md-2  mb-3 mb-xl-0">
+        <a class="btn btn-block btn-success" href="/admin/gruplar/excel">Excel Çıktısı</a>
+    </div>
+
+</div>
+
+{% if !grupBilgileri %}
+<div class="col-md-12 flashMsg">
+    <div class="alert alert-success alert-dismissible">
+        <button type="button" class="close" data-dismiss="alert" aria-hidden="true">×</button>
+        <h5><i class="icon fas fa-check"></i> Uyarı!</h5>
+        Grup Bulunamadı
+    </div>
+</div>
+<!-- /.alert -->
+{% endif %}
+
+<div id="myList">
+    <div class="card">
+        <div class="card-body">
+            <div class="row">
+                <div class="col-md-4">
+                    <span class="help-block">Kişi Ara</span>
+                    <input class="form-control search" id="text-input" type="text" name="text-input"
+                        placeholder="Kişi Ara">
+               
+                   
+                </div>
+
+
+                <div class="col-md-4">
+                    <button class="CustomClear btn btn-info btn-sm">Aramayı Temizle</button>
+                </div>
+
+                <table style="margin-top: 15px; display: none;"  class="table table-responsive-sm table-sm table-striped stnc-table">
+                    <thead  class="theachShow">
+                        <tr>
+                            <th>Adı Soyadı</th>
+                            <th>Tel</th>
+                            <th>Kesim No</th>
+                            <th>Referans Ad</th>
+                            <th>Referans Tel</th>
+                            <th>İşlemler</th>
+                        </tr>
+                    </thead>
+                    <tbody class="list">
+                        {% for grupBilgi in grupBilgileri %}
+                        {% for kurban in grupBilgi.KurbanKisiList %}
+                        <tr>
+                            <td class="adsoyad">{{kurban.KisiAdSoyad }}</td>
+                            <td class="telefon">{{kurban.KisiTelefon}}</td>
+                            <td class="kesimNo">{{grupBilgi.KesimSiraNo}}</td>
+                            <td class="ref1">{{kurban.ReferansAdSoyad}}</td>
+                            <td class="refTel">{{kurban.ReferansTelefon}}</td>
+                            <td class="goster">
+                                <button class="show btn btn-info btn-sm"
+                                    data-filter=".sira{{grupBilgi.KesimSiraNo}}">Kesim No {{grupBilgi.KesimSiraNo}}
+                                    Grubunu Göster</button>
+
+                                <a href="/admin/kurban/edit/{{kurban.ID}}?action=odemelerList"
+                                    class=" btn btn-warning btn-sm">Ödemelerini Göster</a>
+
+                                    
+                                <a href="/admin/kisiler/edit/{{kurban.KisiID}}"
+                                class=" btn btn-danger btn-sm">Kişi Bilgileri</a>
+                            </td>
+                        </tr>
+                        {% endfor %}
+                        {% endfor %}
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+<div class="row">
+    <div class="col-sm-12 ">
+
+
+        <div class="card ">
+            <div class="card-header">
+   
+        
+                <form method="POST" action="/admin/gruplar/yerDegistir" accept-charset="UTF-8">
+                    <input name="_csrf" type="hidden" value="{{ csrf }}">
+        
+                    <div class="form-group">  
+                        <input class="form-control " id="targetGrupID" name="targetGrupID" type="hidden">
+                    </div>
+        
+                    <div class="form-group"> 
+                        <input class="form-control " id="targetKurbanID" name="targetKurbanID" type="hidden">
+                    </div>
+        
+        
+                    <div class="form-group">
+                        <input class="form-control " id="targetGruplideri" name="targetGruplideri" type="hidden">
+                    </div>
+        
+        
+        
+                    <div class="form-group"> 
+                        <input class="form-control " id="sourceGrupID" name="sourceGrupID" type="hidden">
+                    </div>
+        
+                    
+               
+        
+                    <div class="form-group"> 
+                        <input class="form-control " id="sourceKurbanID" name="sourceKurbanID" type="hidden">
+                    </div>
+        
+        
+        
+                    <div class="form-group"> 
+                        <input class="form-control " id="sourceGruplideri" name="sourceGruplideri" type="hidden">
+                    </div>
+        
+
+                    <button  class="btn btn-block btn-danger " name="kaydet" type="submit">
+                        Değiştir
+                    </button>
+                </form>
+             
+            </div>
+        </div>
+
+
+    </div>
+</div>
+
+<div class="row">
+    <div class="col-sm-6 col-xl-6  ">
+        {% for grupBilgi in grupBilgileri %}
+
+
+        <div class="card border-{{grupBilgi.GrupIsoTopeAlert}} bg-{{grupBilgi.GrupIsoTopeAlert}}">
+            {% if grupBilgi.Durum==2 %}
+            <div class="card-header card-header-noAtama text-center ">
+                Bu Gruba Hayvan Atanmamıştır <a href="/admin/gruplar/hayvanata">Hayvan atamak için tıklayın</a>
+            </div>
+            <hr>
+            {% endif %}
+            <div class="card-header">
+                <div class="card-header-bottom">
+                    <span style="padding: 10px;
+                                    margin-right: 9px;" class="badge badge-pill badge-info float-left">Kesim No:
+                        {{grupBilgi.KesimSiraNo}}
+                    </span>
+
+
+                    <span style="padding: 10px; margin-right: 9px;"
+                        class="badge badge-pill badge-{{grupBilgi.GrupIsoTopeAlert}} float-left">{{grupBilgi.GrupIsoTopeTRname}}
+                    </span>
+
+                    <strong> Grup Adı:</strong> {{grupBilgi.GrupAdi }} / <strong>Kurban Fiyatı:
+                    </strong>
+
+                    <span class="myMoney2">{{ grupBilgi.ToplamKurbanFiyati|stringformat:"%.2f"}}</span> TL
+
+                    <small>Küpe NO: {{grupBilgi.KupeNo }}</small>
+
+
+                    <div class="btn-group float-right">
+                        <button class="btn btn-info dropdown-toggle btn-sm" type="button" data-toggle="dropdown"
+                            aria-haspopup="true" aria-expanded="false">İşlemler
+                        </button>
+                        <div class="dropdown-menu" x-placement="bottom-start"
+                            style="will-change: transform; margin: 0px;">
+                            <a class="dropdown-item" href="/admin/gruplar/edit/{{grupBilgi.ID}}">Grubu Düzenle</a>
+                        </div>
+                    </div>
+
+                </div>
+
+                <div class="card-header-actions">
+                    <a class="card-header-action btn-setting" href="#">
+                        <svg class="c-icon">
+                            <use xlink:href="assets/vendors/@coreui/icons/svg/free.svg#cil-settings">
+                            </use>
+                        </svg></a>
+                </div>
+
+
+            </div>
+
+            <div class="card-body ">
+                <div class="accordion" id="accordion{{grupBilgi.ID}}" role="tablist">
+                    <div class="card mb-0">
+                        <div class="card-header" id="headingOne{{grupBilgi.ID}}" role="tab">
+                            <h5 class="mb-0">
+                                <a data-toggle="collapse" href="#collapseOne{{grupBilgi.ID}}" aria-expanded="true"
+                                    aria-controls="collapseOne{{grupBilgi.ID}}">
+                                    <span style="color: crimson;">Kesim Sıra No: </span>
+                                    <span class="myMoney"> {{grupBilgi.KesimSiraNo }} </span>
+                                    <span style="color: crimson;"> / Hisse Fiyatı: </span>
+                                    <span class="myMoney">
+                                        {{grupBilgi.KisiBasiDusenHisseFiyati|stringformat:"%.2f" }}
+                                    </span> TL /
+                                    <span style="color: crimson;">Toplam Ağırlık :</span>
+                                    {{grupBilgi.Agirlik}} KG /
+                                    <span style="color: crimson;">Kişi Başı Düşen Tahmini Kilo: </span>
+                                    {{grupBilgi.Agirlik / grupBilgi.HissedarAdet}} KG  </a>
+                            </h5>
+                        </div>
+
+
+
+                        <div class="collapse show" id="collapseOne{{grupBilgi.ID}}" role="tabpanel"
+                            aria-labelledby="headingOne{{grupBilgi.ID}}" data-parent="#accordion{{grupBilgi.ID}}">
+                            <div class="card-body">
+                                <div class="row">
+                                    <div class="col-md-12">
+                                        <table
+                                            class="table table-hover table-responsive-sm table-bordered table-striped table-sm">
+                                            <thead>
+                                                <tr>
+                                                    <th class="text-center">Seç</th>
+                                                    <th class="text-center">No</th>
+                                                    <th>Adı Soyadı</th>
+                                                    <th>Toplam Ödeme</th>
+                                                    <th>Kalan Borç</th>
+                                                    <th>Referans </th>
+
+
+                                                </tr>
+                                            </thead>
+                                            <tbody>
+                                                {% for kurban in grupBilgi.KurbanKisiList %}
+
+
+
+                                                {% if kurban.KisiID!=1 %}
+                                                <tr>
+                                                    <td>
+                                                        <div class="form-check form-check-inline mr-1">
+                                                            <input class="form-check-input selectedTarget"
+                                                                id="inline-radio{{kurban.ID}}" type="radio"
+                                                                value="{{kurban.ID}}" data-gruplideri="{{kurban.GrupLideri}}" data-grupid="{{grupBilgi.ID}}"
+                                                                name="selectedTarget">
+                                                            <label class="form-check-label"
+                                                                for="inline-radio{{kurban.ID}}">Seç {{kurban.GrupLideri}}</label>
+
+                                                        </div>
+                                                    </td>
+                                                    <td class="text-center">
+                                                        <strong class="text-center">{{forloop.Counter}}</strong>
+                                                    </td>
+
+
+
+
+                                                    <td>
+                                                        <!-- <a target="_blank" href="https://wa.me/90{{kurban.Telefon }}?text=Test">WhatsApp</a> -->
+                                                        <div>
+                                                            <strong>{{kurban.KisiAdSoyad}}</strong>
+                                                        </div>
+                                                        <div class="small text-muted">
+                                                            <span>Tel</span> | {{kurban.KisiTelefon }}
+                                                        </div>
+                                                        {% if kurban.GrupLideri==0 %}
+                                                        <div><strong style="color: brown;">Grup Lideri
+                                                            </strong></div>
+                                                        {% endif %}
+                                                    </td>
+
+                                                    {% if kurban.BorcDurum!=3 %}
+                                                    <td>
+                                                        <strong class="myMoney2">
+                                                            {{kurban.Bakiye|stringformat:"%.2f"}}</strong>
+                                                        <small>TL</small>
+                                                    </td>
+                                                    {% endif %}
+
+                                                    {% if kurban.BorcDurum!=3 %}
+                                                    <td>
+                                                        <strong class="myMoney3">
+                                                            {{kurban.Alacak|stringformat:"%.2f"}}</strong>
+                                                        <small>TL</small>
+
+
+                                                        {% if kurban.BorcDurum==6 %}
+                                                        <small style="padding: 5px;" class="alert alert-danger">Ödeme
+                                                            Tamamlandı</small>
+                                                        {% endif %}
+
+                                                    </td>
+                                                    {% endif %}
+
+
+                                                    {% if kurban.BorcDurum==3 %}
+                                                    <td>
+                                                        <small style="padding: 5px;" class="alert alert-danger">Kasamız
+                                                            Borçlu
+                                                            Durumda</small>
+                                                        <br>
+                                                        <br>
+                                                        <strong class="myMoney2">
+                                                            {{kurban.Borc|stringformat:"%.2f"}}</strong>
+                                                        <small>TL</small>
+                                                    </td>
+                                                    <td>
+                                                    </td>
+                                                    {% endif %}
+
+                                                    <td>
+                                                        {% if kurban.ReferansAdSoyad!="" %}
+
+                                                        <span>{{kurban.ReferansAdSoyad}}</span><br>
+                                                        <strong> TEL:</strong>
+                                                        <small>{{kurban.ReferansTelefon }} </small>
+
+                                                        {% endif %}
+
+
+
+                                                    </td>
+
+
+                                                </tr>
+
+                                                {% else %}
+                                                <tr>
+
+                                                    <td>
+                                                        <div class="form-check form-check-inline mr-1">
+                                                            <input class="form-check-input selectedTarget"
+                                                                id="inline-radio{{kurban.ID}}" type="radio"
+                                                                value="{{kurban.ID}}" data-gruplideri="{{kurban.GrupLideri}}" data-grupid="{{grupBilgi.ID}}"
+                                                                name="selectedTarget">
+                                                            <label class="form-check-label"
+                                                                for="inline-radio{{kurban.ID}}">Seç {{kurban.GrupLideri}}</label>
+                                                        </div>
+                                                    </td>
+                                                    <td class="text-center">
+                                                        <strong class="text-center">{{forloop.Counter}}</strong>
+                                                    </td>
+
+
+
+                                                    <td colspan="4">
+                                                        <div style="padding:5px" class="alert alert-danger"
+                                                            role="alert">
+                                                            Kişi Atanmamıştır <a target="_blank"
+                                                                href="/admin/kurban/edit/{{kurban.ID}}">atamak
+                                                                için tıklayınız</a></div>
+                                                    </td>
+
+
+
+                                                </tr>
+                                                {% endif%}
+                                                {% endfor %}
+
+                                            </tbody>
+                                        </table>
+
+                                    </div>
+
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="card mb-0">
+                        <div class="card-header text-" id="headingTwo{{grupBilgi.ID}}" role="tab">
+                            <h5 class="mb-0"><a data-toggle="collapse" href="#collapseTwo{{grupBilgi.ID}}"
+                                    aria-expanded="true" aria-controls="collapseTwo{{grupBilgi.ID}}">Grubun Muhasebe
+                                    Bilgileri</a></h5>
+                        </div>
+                        <div class="collapse" id="collapseTwo{{grupBilgi.ID}}" role="tabpanel"
+                            aria-labelledby="headingTwo{{grupBilgi.ID}}" data-parent="#accordion{{grupBilgi.ID}}">
+                            <div class="card-body">
+                                <div class="row">
+                                    <div class="col-sm-4 col-lg-4 col-md-4">
+                                        <div class="card">
+                                            <div class="card-body">
+                                                <div class="text-value-md moneyFormat">
+                                                    {{grupBilgi.ToplamOdemeler|stringformat:"%.2f" }}
+                                                </div>TL
+                                                <div>Toplam Ödemeler</div>
+                                                <div> <a target="_blank"
+                                                        href="/admin/kurban/edit/{{kurban.ID}}">Düzenle</a>
+                                                </div>
+
+                                            </div>
+                                        </div>
+                                    </div>
+
+                                    <div class="col-sm-4 col-lg-4 col-md-4">
+                                        <div class="card">
+                                            <div class="card-body">
+                                                <div class="text-value-md moneyFormat">
+                                                    {{grupBilgi.KalanBorclar|stringformat:"%.2f"}}
+                                                </div>TL
+                                                <strong>Kalan Borçlar Toplamı</strong>
+                                                <div>
+                                                    <a target="_blank"
+                                                        href="/admin/kurban/edit/{{kurban.ID}}">Düzenle</a>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+
+
+                                    <div class="col-sm-4 col-lg-4 col-md-4">
+                                        <div class="card">
+                                            <div class="card-body">
+                                                <div class="text-value-md">
+                                                    {{grupBilgi.KasaBorcu|stringformat:"%.2f" }} TL
+                                                </div>
+                                                <div>Bizim Borcumuz</div>
+                                                <div> <a target="_blank"
+                                                        href="/admin/kurban/edit/{{kurban.ID}}">Düzenle</a>
+                                                </div>
+
+                                            </div>
+                                        </div>
+                                    </div>
+
+                                </div>
+
+                            </div>
+                        </div>
+                    </div>
+
+                </div>
+            </div>
+        </div>
+
+
+        {% endfor %}
+    </div>
+
+    <div class="col-sm-6 col-xl-6  ">
+        {% for grupBilgi in grupBilgileri %}
+
+
+        <div class="card border-{{grupBilgi.GrupIsoTopeAlert}} bg-{{grupBilgi.GrupIsoTopeAlert}}">
+            {% if grupBilgi.Durum==2 %}
+            <div class="card-header card-header-noAtama text-center ">
+                Bu Gruba Hayvan Atanmamıştır <a href="/admin/gruplar/hayvanata">Hayvan atamak için tıklayın</a>
+            </div>
+            <hr>
+            {% endif %}
+            <div class="card-header">
+                <div class="card-header-bottom">
+                    <span style="padding: 10px;
+                                    margin-right: 9px;" class="badge badge-pill badge-info float-left">Kesim No:
+                        {{grupBilgi.KesimSiraNo}}
+                    </span>
+
+
+                    <span style="padding: 10px; margin-right: 9px;"
+                        class="badge badge-pill badge-{{grupBilgi.GrupIsoTopeAlert}} float-left">{{grupBilgi.GrupIsoTopeTRname}}
+                    </span>
+
+                    <strong> Grup Adı:</strong> {{grupBilgi.GrupAdi }} / <strong>Kurban Fiyatı:
+                    </strong>
+
+                    <span class="myMoney2">{{ grupBilgi.ToplamKurbanFiyati|stringformat:"%.2f"}}</span> TL
+
+                    <small>Küpe NO: {{grupBilgi.KupeNo }}</small>
+
+
+                    <div class="btn-group float-right">
+                        <button class="btn btn-info dropdown-toggle btn-sm" type="button" data-toggle="dropdown"
+                            aria-haspopup="true" aria-expanded="false">İşlemler
+                        </button>
+                        <div class="dropdown-menu" x-placement="bottom-start"
+                            style="will-change: transform; margin: 0px;">
+                            <a class="dropdown-item" href="/admin/gruplar/edit/{{grupBilgi.ID}}">Grubu Düzenle</a>
+                        </div>
+                    </div>
+
+                </div>
+
+                <div class="card-header-actions">
+                    <a class="card-header-action btn-setting" href="#">
+                        <svg class="c-icon">
+                            <use xlink:href="assets/vendors/@coreui/icons/svg/free.svg#cil-settings">
+                            </use>
+                        </svg></a>
+                </div>
+
+
+            </div>
+
+            <div class="card-body ">
+                <div class="accordion" id="accordion{{grupBilgi.ID}}" role="tablist">
+                    <div class="card mb-0">
+                        <div class="card-header" id="headingOne{{grupBilgi.ID}}" role="tab">
+                            <h5 class="mb-0">
+                                <a data-toggle="collapse" href="#collapseOne{{grupBilgi.ID}}" aria-expanded="true"
+                                    aria-controls="collapseOne{{grupBilgi.ID}}">
+                                    <span style="color: crimson;">Kesim Sıra No: </span>
+                                    <span class="myMoney"> {{grupBilgi.KesimSiraNo }} </span>
+                                    <span style="color: crimson;"> / Hisse Fiyatı: </span>
+                                    <span class="myMoney">
+                                        {{grupBilgi.KisiBasiDusenHisseFiyati|stringformat:"%.2f" }}
+                                    </span> TL /
+                                    <span style="color: crimson;">Toplam Ağırlık :</span>
+                                    {{grupBilgi.Agirlik}} KG /
+                                    <span style="color: crimson;">Kişi Başı Düşen Tahmini Kilo: </span>
+                                    {{grupBilgi.Agirlik / grupBilgi.HissedarAdet}} KG  </a>
+                            </h5>
+                        </div>
+
+
+
+                        <div class="collapse show" id="collapseOne{{grupBilgi.ID}}" role="tabpanel"
+                            aria-labelledby="headingOne{{grupBilgi.ID}}" data-parent="#accordion{{grupBilgi.ID}}">
+                            <div class="card-body">
+                                <div class="row">
+                                    <div class="col-md-12">
+                                        <table
+                                            class="table table-hover table-responsive-sm table-bordered table-striped table-sm">
+                                            <thead>
+                                                <tr>
+                                                    <th class="text-center">Seç</th>
+                                                    <th class="text-center">No</th>
+                                                    <th>Adı Soyadı</th>
+                                                    <th>Toplam Ödeme</th>
+                                                    <th>Kalan Borç</th>
+                                                    <th>Referans </th>
+
+
+                                                </tr>
+                                            </thead>
+                                            <tbody>
+                                                {% for kurban in grupBilgi.KurbanKisiList %}
+
+
+
+                                                {% if kurban.KisiID!=1 %}
+                                                <tr>
+                                                    <td>
+                                                        <div class="form-check form-check-inline mr-1">
+                                                            <input class="form-check-input sourceTarget"
+                                                                id="inline-radio{{kurban.ID}}" type="radio"
+                                                                value="{{kurban.ID}}" data-gruplideri="{{kurban.GrupLideri}}" data-grupid="{{grupBilgi.ID}}"
+                                                                name="sourceTarget">
+                                                            <label class="form-check-label"
+                                                                for="inline-radio{{kurban.ID}}">Seç {{kurban.GrupLideri}}</label>
+                                                        </div>
+                                                    </td>
+                                                    <td class="text-center">
+                                                        <strong class="text-center">{{forloop.Counter}}</strong>
+                                                    </td>
+
+
+
+
+                                                    <td>
+                                                        <!-- <a target="_blank" href="https://wa.me/90{{kurban.Telefon }}?text=Test">WhatsApp</a> -->
+                                                        <div>
+                                                            <strong>{{kurban.KisiAdSoyad}}</strong>
+                                                        </div>
+                                                        <div class="small text-muted">
+                                                            <span>Tel</span> | {{kurban.KisiTelefon }}
+                                                        </div>
+                                                        {% if kurban.GrupLideri==0 %}
+                                                        <div><strong style="color: brown;">Grup Lideri
+                                                            </strong></div>
+                                                        {% endif %}
+                                                    </td>
+
+                                                    {% if kurban.BorcDurum!=3 %}
+                                                    <td>
+                                                        <strong class="myMoney2">
+                                                            {{kurban.Bakiye|stringformat:"%.2f"}}</strong>
+                                                        <small>TL</small>
+                                                    </td>
+                                                    {% endif %}
+
+                                                    {% if kurban.BorcDurum!=3 %}
+                                                    <td>
+                                                        <strong class="myMoney3">
+                                                            {{kurban.Alacak|stringformat:"%.2f"}}</strong>
+                                                        <small>TL</small>
+
+
+                                                        {% if kurban.BorcDurum==6 %}
+                                                        <small style="padding: 5px;" class="alert alert-danger">Ödeme
+                                                            Tamamlandı</small>
+                                                        {% endif %}
+
+                                                    </td>
+                                                    {% endif %}
+
+
+                                                    {% if kurban.BorcDurum==3 %}
+                                                    <td>
+                                                        <small style="padding: 5px;" class="alert alert-danger">Kasamız
+                                                            Borçlu
+                                                            Durumda</small>
+                                                        <br>
+                                                        <br>
+                                                        <strong class="myMoney2">
+                                                            {{kurban.Borc|stringformat:"%.2f"}}</strong>
+                                                        <small>TL</small>
+                                                    </td>
+                                                    <td>
+                                                    </td>
+                                                    {% endif %}
+
+                                                    <td>
+                                                        {% if kurban.ReferansAdSoyad!="" %}
+
+                                                        <span>{{kurban.ReferansAdSoyad}}</span><br>
+                                                        <strong> TEL:</strong>
+                                                        <small>{{kurban.ReferansTelefon }} </small>
+
+                                                        {% endif %}
+
+
+
+                                                    </td>
+
+
+                                                </tr>
+
+                                                {% else %}
+                                                <tr>
+
+                                                    <td>
+                                                        <div class="form-check form-check-inline mr-1">
+                                                            <input class="form-check-input sourceTarget"
+                                                                id="inline-radio{{kurban.ID}}" type="radio"
+                                                                value="{{kurban.ID}}" data-gruplideri="{{kurban.GrupLideri}}" data-grupid="{{grupBilgi.ID}}"
+                                                                name="sourceTarget">
+                                                            <label class="form-check-label"
+                                                                for="inline-radio{{kurban.ID}}">Seç {{kurban.GrupLideri}}</label>
+                                                        </div>
+                                                    </td>
+                                                    <td class="text-center">
+                                                        <strong class="text-center">{{forloop.Counter}}</strong>
+                                                    </td>
+
+
+
+                                                    <td colspan="4">
+                                                        <div style="padding:5px" class="alert alert-danger"
+                                                            role="alert">
+                                                            Kişi Atanmamıştır <a target="_blank"
+                                                                href="/admin/kurban/edit/{{kurban.ID}}">atamak
+                                                                için tıklayınız</a></div>
+                                                    </td>
+
+
+
+                                                </tr>
+                                                {% endif%}
+                                                {% endfor %}
+
+                                            </tbody>
+                                        </table>
+
+                                    </div>
+
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="card mb-0">
+                        <div class="card-header text-" id="headingTwo{{grupBilgi.ID}}" role="tab">
+                            <h5 class="mb-0"><a data-toggle="collapse" href="#collapseTwo{{grupBilgi.ID}}"
+                                    aria-expanded="true" aria-controls="collapseTwo{{grupBilgi.ID}}">Grubun Muhasebe
+                                    Bilgileri</a></h5>
+                        </div>
+                        <div class="collapse" id="collapseTwo{{grupBilgi.ID}}" role="tabpanel"
+                            aria-labelledby="headingTwo{{grupBilgi.ID}}" data-parent="#accordion{{grupBilgi.ID}}">
+                            <div class="card-body">
+                                <div class="row">
+                                    <div class="col-sm-4 col-lg-4 col-md-4">
+                                        <div class="card">
+                                            <div class="card-body">
+                                                <div class="text-value-md moneyFormat">
+                                                    {{grupBilgi.ToplamOdemeler|stringformat:"%.2f" }}
+                                                </div>TL
+                                                <div>Toplam Ödemeler</div>
+                                                <div> <a target="_blank"
+                                                        href="/admin/kurban/edit/{{kurban.ID}}">Düzenle</a>
+                                                </div>
+
+                                            </div>
+                                        </div>
+                                    </div>
+
+                                    <div class="col-sm-4 col-lg-4 col-md-4">
+                                        <div class="card">
+                                            <div class="card-body">
+                                                <div class="text-value-md moneyFormat">
+                                                    {{grupBilgi.KalanBorclar|stringformat:"%.2f"}}
+                                                </div>TL
+                                                <strong>Kalan Borçlar Toplamı</strong>
+                                                <div>
+                                                    <a target="_blank"
+                                                        href="/admin/kurban/edit/{{kurban.ID}}">Düzenle</a>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+
+
+                                    <div class="col-sm-4 col-lg-4 col-md-4">
+                                        <div class="card">
+                                            <div class="card-body">
+                                                <div class="text-value-md">
+                                                    {{grupBilgi.KasaBorcu|stringformat:"%.2f" }} TL
+                                                </div>
+                                                <div>Bizim Borcumuz</div>
+                                                <div> <a target="_blank"
+                                                        href="/admin/kurban/edit/{{kurban.ID}}">Düzenle</a>
+                                                </div>
+
+                                            </div>
+                                        </div>
+                                    </div>
+
+                                </div>
+
+                            </div>
+                        </div>
+                    </div>
+
+                </div>
+            </div>
+        </div>
+
+
+        {% endfor %}
+    </div>
+
+</div>
+
+
+
+
+
+
+
+
+{% endblock %}
+
+
+{% block jsInline %}
+
+<script src="/assets/admin/js/tooltips.js"></script>
+<script src="/assets/admin/js/jquery.mask.min.js"></script>
+<script src="/assets/admin/js/list.min.js"></script>
+<script src="/assets/admin/js/isotope.pkgd.min.js"></script>
+<script>
+
+
+    $(function () { //shorthand document.ready function
+
+        $('.moneyFormat').mask('#.##0,00', { reverse: true });
+    });
+
+
+    $('.selectedTarget').click(function () {
+        let grupID = $(this).data('grupid');
+        let gruplideri = $(this).data('gruplideri');
+        let kurbanID = $(this).val();
+
+        $("#targetGrupID").val(grupID);
+        $("#targetKurbanID").val(kurbanID);
+        $("#targetGruplideri").val(gruplideri);
+
+
+
+
+        console.log(grupID)
+        console.log(kurbanID)
+    });
+
+
+
+    $('.sourceTarget').click(function () {
+        let grupID = $(this).data('grupid');
+        let gruplideri = $(this).data('gruplideri');
+        let kurbanID = $(this).val();
+
+        $("#sourceGrupID").val(grupID);
+        $("#sourceKurbanID").val(kurbanID);
+        $("#sourceGruplideri").val(gruplideri);
+
+        console.log(grupID)
+        console.log(kurbanID)
+    });
+
+    // init Isotope
+    var $grid = $('.grid').isotope({
+        itemSelector: '.element-item',
+        layoutMode: 'fitRows',
+
+    });
+
+    var options = {
+        valueNames: ['adsoyad', 'telefon', 'ref1', 'refTel']
+    };
+
+    var myList = new List('myList', options);
+
+    var noItems = $('<div class="item" id="no-items-found">Aradığınız kişi bulunamadı</div>');
+
+    myList.on('updated', function (list) {
+        if (list.matchingItems.length == 0) {
+            $(list.list).append(noItems);
+            $('.theachShow').hide();
+
+        } else {
+            noItems.detach();
+            var filterValue = "*";
+            // use filterFn if matches value
+            filterValue = filterValue;
+            $grid.isotope({ filter: filterValue });
+            $('.theachShow').show();
+            $('.stnc-table').show();
+
+        }
+    });
+
+    myList.on('searchComplete', function (list) {
+        if ($('input.search').val() == '') {
+            list.visibleItems.forEach(i => i.hide())
+            $('.theachShow').hide();
+        }
+    }).trigger('searchComplete')
+
+    setTimeout(function () {
+        $('input.search').focus();
+    }, 250);
+
+
+
+
+
+
+    // bind filter button click
+    $('#myList .list').on('click', 'button', function () {
+        var filterValue = $(this).attr('data-filter');
+        filterValue = filterValue;
+        $grid.isotope({ filter: filterValue });
+    });
+
+    $('.CustomClear').on('click', function () {
+        var filterValue = "*";
+        filterValue = filterValue;
+        $grid.isotope({ filter: filterValue });
+        $("#myList input.search").val("");
+        myList.on('searchComplete', function (list) {
+            if ($('input.search').val() == '') {
+                list.visibleItems.forEach(i => i.hide())
+            }
+        }).trigger('searchComplete')
+        $('.theachShow').hide();
+        noItems.detach();
+    });
+
+    // bind filter button click
+    $('#filters').on('click', 'button', function () {
+        var filterValue = $(this).attr('data-filter');
+        // use filterFn if matches value
+        filterValue = filterValue;
+        $grid.isotope({ filter: filterValue });
+    });
+
+    // change is-checked class on buttons
+    $('.buttonIsoTop-group').each(function (i, buttonGroup) {
+        var $buttonGroup = $(buttonGroup);
+        $buttonGroup.on('click', 'button', function () {
+            $buttonGroup.find('.is-checked').removeClass('is-checked');
+            $(this).addClass('is-checked');
+        });
+    });
+
+</script>
+{% endblock %}

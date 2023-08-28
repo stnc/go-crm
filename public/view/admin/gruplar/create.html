@@ -1,0 +1,314 @@
+
+{% extends "../app.html" %} {% block content %}
+{% set RootName = 'admin-gruplar' %}
+{% set routerName = 'admin/gruplar' %}
+
+
+{% if flashMsg.msg!="" %}
+<!-- alert -->
+<div class="alert alert-{{flashMsg.type}} alert-dismissible">
+    <button type="button" class="close" data-dismiss="alert" aria-hidden="true">×</button>
+    <h5><i class="icon fas fa-check"></i> Uyarı!</h5>
+    {{flashMsg.msg}}
+</div>
+<!-- /.alert -->
+{%endif%}
+
+<form method="POST" action="/{{routerName}}/store" accept-charset="UTF-8" class="form-control1" id="{{RootName}}-store"
+    enctype="multipart/form-data">
+    <input name="Siralama" type="hidden" value="1">
+    <input name="_csrf" type="hidden" value="{{ csrf }}">
+    <input name="_method" type="hidden" value="PUT">
+    <input type="hidden" value="{{ post.Agirlik }}" id="Agirlik" name="Agirlik">
+    <input type="hidden" value="{{post.SatisFiyatTuru }}"  id="SatisFiyatTuru" name="SatisFiyatTuru">
+    <input type="hidden" value="{{post.SatisFiyati }}" id="SatisFiyati" name="SatisFiyati">
+    <input id="ID" name="ID" value="{{post.ID}}" type="hidden">
+    <div class="row">
+
+        {%if !hayvanlar%}
+        <div class="col-md-12">
+            <br>
+
+            <div class="alert alert-warning alert-dismissible">
+                <button type="button" class="close" data-dismiss="alert" aria-hidden="true">×</button>
+                <a style="color: red;" href="/admin/hayvanBilgisi/create">Tüm Hayvanlar Bir Gruba bağlanmıştır, yeni
+                    eklemek için tıklayın </a>
+
+            </div>
+        </div>
+        {% else %}
+
+
+        <div class="col-md-6">
+            <div class="row">
+                <div class="col-md-12">
+                    <div class="card">
+                        <div class="card-header"> <strong>
+                                {% if title %} {{ title }} - 
+                                {% else %} STNC OTOMASYON SİSTEMi
+                                {% endif %}
+                            </strong>
+                            <small>Form</small>
+                        </div>
+                        <div class="card-body">
+
+
+                            <div class="form-group">
+                                <label for="KesimSiraNo">Kesim Sira No</label>
+                                <input class="form-control {{err.KesimSiraNo_valid}}" id="KesimSiraNo"
+                                    name="KesimSiraNo"  value="{{otomatikSira2021}}" type="text">
+                                {% if err.KesimSiraNo_error %}
+                                <div class="invalid-feedback" style="display:block">{{err.KesimSiraNo}}</div>
+                                {% endif %}
+                            </div>
+
+                            <div class="form-group">
+                                <label for="GrupAdi">Grup Adı [ Örnek: Erdoğdu Ailesi ]</label>
+                                <input class="form-control {{err.GrupAdi_valid}}" id="GrupAdi" name="GrupAdi"
+                                    value="{{post.GrupAdi}}" type="text">
+                                {% if err.GrupAdi_error %}
+                                <div class="invalid-feedback" style="display:block">{{err.GrupAdi}}</div>
+                                {% endif %}
+                            </div>
+
+                            <div class="form-group">
+                                <label for="HayvanBilgisiID">Hayvan Bilgisi ID</label>
+
+                                <select class="form-control {{err.HayvanBilgisiID_valid}}" name="HayvanBilgisiID"
+                                    id="HayvanBilgisiID">
+                                    {% for hayvan in hayvanlar %}
+                                    <option {%if post.HayvanBilgisiID==hayvan.ID %} selected {% endif %}
+                                        value="{{hayvan.ID}}">Küpe: {{hayvan.KupeNo}} / {{hayvan.Agirlik}} KG</option>
+                                    {% endfor %}
+                                </select>
+
+
+
+                                {% if err.HayvanBilgisiID_error %}
+                                <div class="invalid-feedback" style="display:block">{{err.HayvanBilgisiID}}</div>
+                                {% endif %}
+                            </div>
+
+
+                            <script id="cartSelectItemsTpl" type="text/x-handlebars-template">
+                                {% verbatim %}
+                                    <ul class="list-group">
+                                    <li class="list-group-item active">Hayvan Bilgileri</li>
+                                    <li class="list-group-item list-group-item-action"><strong>Ağırlık:</strong> {{jsonData.agirlik}} KG</li>
+                                    <li class="list-group-item list-group-item-action"><strong>Küpe NO :</strong>{{jsonData.kupeNo}} </li>
+                                    <li class="list-group-item list-group-item-action"><strong>Satın alındığı Ahır :</strong>{{jsonData.hayvanSatisYerleri.yer_adi}} </li>
+                                    <li class="list-group-item list-group-item-action"><strong style="background-color: black;color:white;padding: 5px;">Bu hesaplamalar ayarlardaki hissedar sayısına göre hesaplanmıştır.</strong> </li>
+
+                                    <li class="list-group-item list-group-item-action ll1">
+                                      <div class="row">
+
+                                            <div class="col-md-10">
+                                                <strong>Satış Fiyatı 1 e göre fiyatı: </strong>
+                                                {{jsonData.satisFiyati1}} TL x  {{jsonData.agirlik}} KG =  {{jsonData.fiyat1}} TL<br> <small>kişi başı düşen fiyat: {{jsonData.kisiBasiDusen1}} TL</small>
+                                             <br>
+                                                <small style="background-color: black;color:red;padding: 5px"> Hangi fiyatı kullanacağınızı seçim yapmazsanız bu fiyat üzerinden kayıt edilir.</small>
+
+                                            </div>
+
+                                        <div class="col-md-2">
+                                            <button class="btn btn-sm btn-primary fiyatBtn"  satisfiyati="{{jsonData.satisFiyati1}}"   satisfiyatturu="1" value="{{jsonData.fiyat1}}" agirlik="{{jsonData.agirlik}}" type="button" aria-pressed="true">Bu Fiyatı Kullanmak için tıklayınız</button>
+                                        </div>
+
+                                      </div>
+                                        
+                                        </li>
+                                    <li class="list-group-item list-group-item-action ll2">
+                                    
+                                            <div class="row">
+                                                <div class="col-md-10">  <strong>Satış Fiyatı 2 e göre fiyatı: </strong>
+                                                    {{jsonData.satisFiyati2}} TL x  {{jsonData.agirlik}} KG =  {{jsonData.fiyat2}} TL<br> <small>kişi başı düşen fiyat: {{jsonData.kisiBasiDusen2}} TL</small></div>
+                                                    <div class="col-md-2">
+                                                        <button class="btn btn-sm btn-primary fiyatBtn"  satisfiyati="{{jsonData.satisFiyati2}}" satisfiyatturu="2" value="{{jsonData.fiyat2}}" agirlik="{{jsonData.agirlik}}" type="button" aria-pressed="true">Bu Fiyatı Kullanmak için tıklayınız</button>
+                                                    </div>
+                                            </div>
+                                        
+                                        
+                                        </li>
+                                    <li class="list-group-item list-group-item-action ll3">
+                                        
+                                        
+                                        <div class="row">
+                                            <div class="col-md-10">  <strong>Satış Fiyatı 3 e göre fiyatı: </strong>
+                                                {{jsonData.satisFiyati3}} TL x  {{jsonData.agirlik}} KG =  {{jsonData.fiyat3}} TL<br> <small>kişi başı düşen fiyat: {{jsonData.kisiBasiDusen3}} TL</small></div>
+                                                <div class="col-md-2">
+                                                    <button class="btn btn-sm btn-primary fiyatBtn" satisfiyati="{{jsonData.satisFiyati3}}" satisfiyatturu="3" value="{{jsonData.fiyat3}}" agirlik="{{jsonData.agirlik}}" type="button" aria-pressed="true">Bu Fiyatı Kullanmak için tıklayınız</button>
+                                                </div>
+                                        </div>
+                                            
+                                            </li>
+                                    <li class="list-group-item list-group-item-action"><strong>Ahır Sahibi / Tel  :</strong>
+                                            {{jsonData.hayvanSatisYerleri.ilgiliKisi}} / {{jsonData.hayvanSatisYerleri.telefon}}   </li>
+
+                                            <li class="list-group-item list-group-item-action"> <a href=/admin/hayvanBilgisi/edit/{{jsonData.id}}>Hayvan Bilgisini Düzenle</a>  </li>        
+                                   </ul> 
+                               {% endverbatim %}
+                            </script>
+                            <div id="cartSelectItems" class="card-body-"></div>
+
+                            <div class="form-group">
+                                <label for="ToplamKurbanFiyati">Kurban Fiyati [otomatik olarak fiyat 1 seçilir]</label>
+                                <input class="form-control {{err.ToplamKurbanFiyati_valid}}" id="ToplamKurbanFiyati"
+                                    name="ToplamKurbanFiyati" readonly value="{{fiyat1}}" type="text">
+
+
+                                {% if err.ToplamKurbanFiyati_error %}
+                                <div class="invalid-feedback" style="display:block">{{err.ToplamKurbanFiyati}}</div>
+                                {% endif %}
+                            </div>
+
+
+                            <div class="form-group">
+                                <label for="AgirlikTipi">Ağırlık Tipi</label>
+                                <select class="form-control" name="AgirlikTipi"
+                                    id="AgirlikTipi">
+                                 
+                                    <option {%if post.AgirlikTipi==1 %} selected {% endif %} value="1">Küçük
+                                        Ağırlık
+                                    </option>
+                                    <option {%if post.AgirlikTipi==2 %} selected {% endif %} value="2">Orta
+                                        Ağırlık
+                                    </option>
+                                    <option {%if post.AgirlikTipi==3 %} selected {% endif %} value="3">
+                                        Büyük
+                                        Ağırlık
+                                    </option>
+                                </select>
+                            </div>
+
+                            <div class="form-group">
+                                <label for="HissedarAdet">Hissedar Adeti</label>
+                                <input class="form-control {{err.HissedarAdet_valid}}" id="HissedarAdet"
+                                    name="HissedarAdet"  value="{{hisseAdeti}}" type="text">
+                                {% if err.HisseFiyati_error %}
+                                <div class="invalid-feedback" style="display:block">{{err.HissedarAdet}}</div>
+                                {% endif %}
+                            </div>
+
+
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-3">
+            <div class="row">
+                <div class="col-md-12">
+                    <div class="card">
+                        <div class="card-header"> <strong>Diğer Bilgiler</strong>
+                        </div>
+                        <div class="card-body">
+                            <div class="form-group">
+                                <label for="Aciklama">Kısa açıklama</label>
+                                <textarea class="form-control {{err.Aciklama_valid}}" id="Aciklama" name="Aciklama"
+                                    rows="9">{{ post.Aciklama }}</textarea>
+                            </div>
+                            <div class="form-group">
+                                <label for="KurbanBayramiYili">Kurban Bayrami Yili</label>
+                                <input class="form-control {{err.KurbanBayramiYili_valid}}" id="KurbanBayramiYili"
+                                    readonly name="KurbanBayramiYili" value="{{kurbanYili}}" type="text">
+                                {% if err.KurbanBayramiYili_error %}
+                                <div class="invalid-feedback" style="display:block">{{err.KurbanBayramiYili}}</div>
+                                {% endif %}
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-3">
+            <div class="row">
+                <div class="col-md-12">
+                    <div class="card">
+                        <div class="card-header"> <strong>Bu kurbana Kayıtlı Kişiler </strong>
+                        </div>
+                        <div class="card-body"></div>
+                    </div>
+                </div>
+                <div class="col-md-12">
+                    <div class="card">
+                        <div class="card-body">
+
+            <button class="btn btn-sm btn-primary" value="kaydet" name="kaydet" type="submit">Kaydet ve düzenle </button>
+                            <br>
+    
+           <button class="btn btn-sm btn-success" value="yeniEkle" name="kaydet" type="submit">Kaydet ve Yeni Ekle</button>
+
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        {% endif %}
+    </div>
+</form>
+
+
+
+{% endblock %}
+{% block jsInline %}
+<!-- <link href="//cdnjs.cloudflare.com/ajax/libs/font-awesome/5.13.0/css/all.min.css" rel="stylesheet" /> -->
+
+<script src="/assets/admin/js/handlebars.min-v4.7.7.js"></script>
+<script type="text/javascript">
+    $(document).ready(function () {
+
+        let id = $("#HayvanBilgisiID").val()
+        ajaxCall(id)
+
+        $(document).on("click", ".fiyatBtn", function () {
+            event.preventDefault();
+            $("#ToplamKurbanFiyati").val($(this).val())
+            $("#SatisFiyatTuru").val($(this).attr("satisfiyatturu"))
+            $("#Agirlik").val($(this).attr("agirlik"))
+            $("#SatisFiyati").val($(this).attr("satisfiyati"))
+            $(".ll1").css({ "backgroundColor": "#fff", "color": "black" });
+            $(".ll2").css({ "backgroundColor": "#fff", "color": "black" });
+            $(".ll3").css({ "backgroundColor": "#fff", "color": "black" });
+            $(".ll"+$(this).attr("satisfiyatturu")).css({ "backgroundColor": "black", "color": "white" });
+        });
+
+        $('#HayvanBilgisiID').change(function () {
+            // alert(this.value);
+            ajaxCall(this.value)
+        });
+    });
+
+    function ajaxCall(id) {
+        fetch("/admin/hayvanBilgisi/hayvanListeAjax/" + id, {
+            method: 'GET',
+            headers: { 'X-Requested-With': 'XMLHttpRequest' }
+        })
+            .then(response => {
+                if (response.ok) {
+                    return response.json()
+                } else {
+                    console.log("error")
+                }
+            })
+            .then(data => {
+                console.log(data)
+                jQuery('#cartSelectItems').empty();
+                let cartSelectTemplate = jQuery('#cartSelectItemsTpl').html();
+                let TemplateCompileCartSelect = Handlebars.compile(cartSelectTemplate);
+                let CompiledHtmlCartSelect = TemplateCompileCartSelect(data);
+                jQuery('#cartSelectItems').html(CompiledHtmlCartSelect);
+
+                //seçim yapmazsa varsayılan olarak kurban fiyatı 1 seçilir 
+                $("#ToplamKurbanFiyati").val(data.jsonData.fiyat1)   
+                $("#SatisFiyati").val(data.jsonData.satisFiyati1)   
+                $("#Agirlik").val(data.jsonData.agirlik)
+                $("#SatisFiyatTuru").val(1)
+             
+            })
+            .catch((error) => {
+                console.log("error")
+            });
+    }
+</script>
+{% endblock %}

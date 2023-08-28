@@ -1,0 +1,102 @@
+{% extends "../app.html" %}
+ {% block content %}
+  {% set RootName = 'admin-hayvanSatisYerleri' %}
+   {% set routerName = 'admin/hayvanSatisYerleri' %}
+
+   
+   {% include "../viewComponents/alertMsg.html"%}
+
+
+
+<form method="POST" action="/{{routerName}}/update" accept-charset="UTF-8" class="form-control1" id="{{RootName}}-update" enctype="multipart/form-data">
+    <input name="_csrf" type="hidden" value="{{ csrf }}">
+    <input name="_method" type="hidden" value="PUT">
+
+
+    <div class="row">
+        <div class="col-md-6">
+            <div class="row">
+                <div class="col-md-12">
+                    <div class="card">
+                        <div class="card-header">
+                            <strong>{% if title %} {{ title }} - Otomasyon {% else %} STNC OTOMASYON SİSTEMi
+                                {% endif %}</strong>
+                            <small>Form</small>
+                        </div>
+
+
+                        <div class="card-body">
+
+                            <div class="form-group">
+                                <label for="YerAdi">YerAdi</label>
+                                <input class="form-control {{err.YerAdi_valid}}" id="YerAdi" name="YerAdi" value="{{post.YerAdi}}" type="text"> {% if err.YerAdi_error %}
+                                <div class="invalid-feedback" style="display:block">{{err.YerAdi}}</div>
+                                {% endif %}
+                            </div>
+
+
+
+
+
+                            <div class="form-group">
+                                <label for="IlgiliKisi">Ilgili Kisi</label>
+                                <input class="form-control {{err.IlgiliKisi_valid}}" id="IlgiliKisi" name="IlgiliKisi" value="{{post.IlgiliKisi}}" type="text"> {% if err.IlgiliKisi_error %}
+                                <div class="invalid-feedback" style="display:block">{{err.IlgiliKisi}}</div>
+                                {% endif %}
+                            </div>
+
+                            <div class="form-group">
+                                <label for="Telefon">Telefon</label>
+                                <input class="form-control {{err.Telefon_valid}}" id="Telefon" name="Telefon" value="{{post.Telefon}}" type="text"> {% if err.Telefon_error %}
+                                <div class="invalid-feedback" style="display:block">{{err.Telefon}}</div>
+                                {% endif %}
+                            </div>
+
+
+
+                            <div class="form-group">
+                                <label for="Adresi"> Adresi
+                                </label>
+                                <textarea class="form-control {{err.Adresi_valid}}" id="Adresi" name="Adresi" rows="9">{{ post.Adresi }}</textarea>
+                            </div>
+
+
+                      
+
+
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+
+
+        <div class="col-md-3">
+            <div class="row">
+        
+                <div class="col-md-12">
+                    <div class="card">
+
+
+                        <div class="card-body">
+                            <input class="form-control {{err.ID}}" id="ID" name="ID" value="{{post.ID}}" type="hidden">
+
+                            <button class="btn btn-sm btn-primary" type="submit"> Kaydet</button>
+                            <button class="btn btn-sm btn-danger" type="reset"> VAZGEÇ</button>
+
+
+                        </div>
+
+
+                    </div>
+                </div>
+            </div>
+        </div>
+
+    </div>
+</form>
+
+
+
+{% endblock %}

@@ -1,0 +1,323 @@
+
+{% extends "../app.html" %}
+ {% block content %}
+{% set RootName = 'admin-gruplar' %}
+{% set routerName = 'admin/gruplar' %}
+
+
+{% include "../viewComponents/alertMsg.html"%}
+
+<form method="POST" action="/{{routerName}}/degistir" accept-charset="UTF-8" class="form-control1"
+    id="{{RootName}}-store" enctype="multipart/form-data">
+
+    <input name="_csrf" type="hidden" value="{{ csrf }}">
+    <input name="_method" type="hidden" value="PUT">
+
+
+
+    <div class="row">
+
+        {% if !gruplar %}
+        <div class="col-md-12">
+            <div class=" alert alert-primary" role="alert">
+            <a href="/admin/gruplar/create">
+                Eklenmiş bir grup bulunamadı yada gruplara atanmış bir hayvan bulunamadı
+                lütfen buradan grup ekleyiniz</a>
+              </div>
+        </div>
+
+        {% else %}
+ 
+  
+            <div class="col-md-12">
+                <div class="card">
+                    <div class="card-body">
+                      
+                        <button class="btn btn-sm btn-primary" value="kaydet" name="kaydet" type="submit">Kaydet ve düzenle
+                        </button>
+    
+                        <!-- <button class="btn btn-sm btn-success" value="yeniEkle" name="kaydet" type="submit">Kaydet ve Yeni Ekle</button> -->
+    
+                    </div>
+                </div>
+            </div>
+      
+    
+
+
+
+
+        <div class="col-md-6">
+            <div class="card">
+                <div class="card-header"> <strong>
+                   Kaynak Grup
+                    </strong>
+                    <small>verilerinin aktarılmasını istediğiniz grup</small>
+
+                </div>
+                <div class="card-body">
+    
+                    <div class="form-group">
+                        <label for="HayvanBilgisiIDSource">Hayvan Bilgisi ID</label>
+
+                        <select class="form-control {{err.HayvanBilgisiID_valid}}" name="HayvanBilgisiIDSource" id="HayvanBilgisiIDSource">
+                            {% for grup in gruplar %}
+                            <option {%if post.HayvanBilgisiID==grup.ID %} selected {% endif %} value="{{grup.ID}}">
+                                Kesim Sıra No: {{grup.KesimSiraNo}} / Grup Adı: {{grup.GrupAdi}} </option>
+                            {% endfor %}
+                        </select>
+
+
+
+                        {% if err.HayvanBilgisiIDSource_error %}
+                        <div class="invalid-feedback" style="display:block">{{err.HayvanBilgisiIDSource}}</div>
+                        {% endif %}
+
+
+
+
+
+                    </div>
+                    <script class="cartSelectItemsSourceTpl" type="text/x-handlebars-template">
+                                {% verbatim %}
+                                    <ul class="list-group">
+
+                                        <li class="list-group-item active">Grup  Bilgileri</li>
+                                        <li class="list-group-item list-group-item-action "><strong>Grup Adı:</strong> {{jsonData.grup_adi}} </li>
+
+                                        <li class="list-group-item list-group-item-action list-group-item-info"><strong>Kesim Sıra Numarası:</strong> {{jsonData.KesimSiraNo}} </li>
+                                        <li class="list-group-item list-group-item-action"><strong> Kurban Fiyati:</strong> {{numberFormat jsonData.ToplamKurbanFiyati thousandsSep="." decimalSep=","}}  </li>
+                                        <li class="list-group-item list-group-item-action list-group-item-info"><strong>Hissedar Adeti:</strong> {{jsonData.HissedarAdet}} </li>
+                                        <li class="list-group-item list-group-item-action "><strong>Kilo :</strong>{{jsonData.Agirlik}} </li>
+
+                                        <li class="list-group-item active">Hissedar Bilgileri</li>
+                            
+                                        
+                                
+                                        <li class="list-group-item list-group-item-action "><strong>Kişi Başı Kurban Fiyatı :</strong>{{jsonData.Kurban.0.KurbanFiyati }} </li>
+                                        <li class="list-group-item list-group-item-action list-group-item-info"><strong>Kişi Başı Düşen Kilo :</strong>{{jsonData.Kurban.0.Agirlik }} </li>
+
+                                        {{#each jsonData.Kurban}}
+
+                                                {{#if_eq adSoyad ""}}
+                                                    <li class="list-group-item list-group-item-action"><strong>  #{{counter @index}} - Adı Soyadı  :</strong>  
+                                                        <small style="color:green">Kimse atanmamış </small> 
+                                                        <a target="_blank" href="/admin/kurban/edit/{{id}}">Atamak için tıklatın </a> 
+                                                        <br>
+                                                         <strong>Telefon :</strong> {{tel}} 
+                                                         <br>
+                                                         <strong>Borç Durumu  :</strong>     
+                                                         {{#if_eq BorcDurum 4}} 
+                                                             <small style="color:green;">Borcu yoktur </small>
+                                                         {{else}}
+                                                          <small style="color: red;">Borcu vardır </small>
+                                                          <br>
+                                                           <strong>Kalan Borcu: {{KalanUcret}} TL</strong>
+                                                         {{/if_eq}}
+                                                         <br>
+                                                         <a target="_blank" href="/admin/kurban/edit/{{id}}">Bilgilerini göster </a> 
+                                                    </li>
+                                                {{else}}
+                                                    <li class="list-group-item list-group-item-action"><strong>  
+                                                   
+
+                                                        #{{counter @index}} - Adı Soyadı  :</strong>{{adSoyad}} 
+                                                        <br>
+                                                         <strong>Telefon :</strong> {{tel}} 
+                                                         <br>
+                                                         <strong>Borç Durumu  :</strong>     
+                                                         {{#if_eq BorcDurum 4}} 
+                                                             <small style="color:green;">Borcu yoktur </small>
+                                                         {{else}}
+                                                          <small style="color: red;">Borcu vardır </small> <strong>Kalan Borcu {{KalanUcret}} TL</strong>
+                                                         {{/if_eq}}
+                                                         <br>
+                                                         <a target="_blank" href="/admin/kurban/edit/{{id}}">Bilgilerini göster </a> 
+                                                        </li>
+                                                {{/if_eq}}
+
+                                        {{/each}}
+
+                                   </ul>
+                          
+                               {% endverbatim %}
+                            </script>
+                    <div class="cartSelectItemsSource" class="card-body-"></div>
+
+               
+
+
+
+                </div>
+            </div>
+        </div>
+
+
+        <div class="col-md-6">
+            <div class="card">
+                <div class="card-header"> <strong>
+                    Hedef Grup
+                    </strong>
+                    <small>verilerinin değişmesini istediğiniz grup</small>
+                </div>
+                <div class="card-body">
+    
+                    <div class="form-group">
+                        <label for="HayvanBilgisiIDTarget">Hayvan Bilgisi ID</label>
+
+                        <select class="form-control {{err.HayvanBilgisiID_valid}}" name="HayvanBilgisiIDTarget"
+                            id="HayvanBilgisiIDTarget">
+                            {% for grup in gruplar %}
+                            <option {%if post.HayvanBilgisiID==grup.ID %} selected {% endif %} value="{{grup.ID}}">
+                                Kesim Sıra No: {{grup.KesimSiraNo}} / Grup Adı: {{grup.GrupAdi}} </option>
+                            {% endfor %}
+                        </select>
+
+
+
+                        {% if err.HayvanBilgisiID_error %}
+                        <div class="invalid-feedback" style="display:block">{{err.HayvanBilgisiID}}</div>
+                        {% endif %}
+
+
+
+
+
+                    </div>
+                    <script class="cartSelectItemsTargetTpl" type="text/x-handlebars-template">
+                                {% verbatim %}
+                                    <ul class="list-group">
+
+                                        <li class="list-group-item active">Grup  Bilgileri</li>
+                                        <li class="list-group-item list-group-item-action "><strong>Grup Adı:</strong> {{jsonData.grup_adi}} </li>
+
+                                        <li class="list-group-item list-group-item-action list-group-item-info"><strong>Kesim Sıra Numarası:</strong> {{jsonData.KesimSiraNo}} </li>
+                                        <li class="list-group-item list-group-item-action"><strong> Kurban Fiyati:</strong> {{numberFormat jsonData.ToplamKurbanFiyati thousandsSep="." decimalSep=","}}  </li>
+                                        <li class="list-group-item list-group-item-action list-group-item-info"><strong>Hissedar Adeti:</strong> {{jsonData.HissedarAdet}} </li>
+                                        <li class="list-group-item list-group-item-action"><strong>Kilo :</strong>{{jsonData.Agirlik}} </li>
+
+                                        <li class="list-group-item active">Hissedar Bilgileri</li>
+                            
+                                        
+                                
+                                        <li class="list-group-item list-group-item-action "><strong>Kişi Başı Kurban Fiyatı :</strong>{{jsonData.Kurban.0.KurbanFiyati }} </li>
+                                        <li class="list-group-item list-group-item-action list-group-item-info"><strong>Kişi Başı Düşen Kilo :</strong>{{jsonData.Kurban.0.Agirlik }} </li>
+
+                                        {{#each jsonData.Kurban}}
+
+                                                {{#if_eq adSoyad ""}}
+                                                    <li class="list-group-item list-group-item-action"><strong>  #{{counter @index}} - Adı Soyadı  :</strong>  
+                                                        <small style="color:green">Kimse atanmamış </small> 
+                                                        <a target="_blank" href="/admin/kurban/edit/{{id}}">Atamak için tıklatın </a> 
+                                                        <br>
+                                                         <strong>Telefon :</strong> {{tel}} 
+                                                         <br>
+                                                         <strong>Borç Durumu  :</strong>     
+                                                         {{#if_eq BorcDurum 4}} 
+                                                             <small style="color:green;">Borcu yoktur </small>
+                                                         {{else}}
+                                                          <small style="color: red;">Borcu vardır </small>
+                                                          <br>
+                                                           <strong>Kalan Borcu: {{KalanUcret}} TL</strong>
+                                                         {{/if_eq}}
+                                                         <br>
+                                                         <a target="_blank" href="/admin/kurban/edit/{{id}}">Bilgilerini göster </a> 
+                                                    </li>
+                                                {{else}}
+                                                    <li class="list-group-item list-group-item-action"><strong>  
+                                                   
+
+                                                        #{{counter @index}} - Adı Soyadı  :</strong>{{adSoyad}} 
+                                                        <br>
+                                                         <strong>Telefon :</strong> {{tel}} 
+                                                         <br>
+                                                         <strong>Borç Durumu  :</strong>     
+                                                         {{#if_eq BorcDurum 4}} 
+                                                             <small style="color:green;">Borcu yoktur </small>
+                                                         {{else}}
+                                                          <small style="color: red;">Borcu vardır </small> <strong>Kalan Borcu {{KalanUcret}} TL</strong>
+                                                         {{/if_eq}}
+                                                         <br>
+                                                         <a target="_blank" href="/admin/kurban/edit/{{id}}">Bilgilerini göster </a> 
+                                                        </li>
+                                                {{/if_eq}}
+
+                                        {{/each}}
+
+                                   </ul>
+                          
+                               {% endverbatim %}
+                            </script>
+                    <div class="cartSelectItemsTarget" class="card-body-"></div>
+
+               
+
+
+
+                </div>
+            </div>
+        </div>
+
+
+
+        {% endif %}
+    </div>
+</form>
+
+
+{% endblock %}
+{% block jsInline %}
+<!-- <link href="//cdnjs.cloudflare.com/ajax/libs/font-awesome/5.13.0/css/all.min.css" rel="stylesheet" /> -->
+
+<script src="/assets/admin/js/handlebars.min-v4.7.7.js"></script>
+<script src="/assets/admin/js/handleBarHelpers.js"></script>
+<script type="text/javascript">
+
+
+    $(document).ready(function () {
+
+        let id = $("#HayvanBilgisiIDSource").val()
+        ajaxCall(id,"Source")
+        ajaxCall(id,"Target")
+  
+
+
+        $('#HayvanBilgisiIDSource').change(function () {
+            // alert(this.value);
+            ajaxCall(this.value,"Source")
+        });
+
+
+        $('#HayvanBilgisiIDTarget').change(function () {
+            // alert(this.value);
+            ajaxCall(this.value,"Target")
+        });
+    });
+
+    function ajaxCall(id,hedef) {
+        fetch("/admin/gruplar/grupBilgisiAPI/" + id, {
+            method: 'GET',
+            headers: { 'X-Requested-With': 'XMLHttpRequest' }
+        })
+            .then(response => {
+                if (response.ok) {
+                    return response.json()
+                } else {
+                    console.log("error")
+                }
+            })
+            .then(data => {
+                console.log(data)
+                jQuery('.cartSelectItems'+hedef).empty();
+                let cartSelectTemplate = jQuery('.cartSelectItems'+hedef+'Tpl').html();
+                let TemplateCompileCartSelect = Handlebars.compile(cartSelectTemplate);
+                let CompiledHtmlCartSelect = TemplateCompileCartSelect(data);
+                jQuery('.cartSelectItems'+hedef).html(CompiledHtmlCartSelect);
+
+            })
+            .catch((error) => {
+                console.log("error")
+            });
+    }
+</script>
+{% endblock %}

@@ -1,0 +1,118 @@
+<div class="card">
+    <div class="card-header">
+        <strong>Ödemeler Listesi</strong>
+    </div>
+
+    <div class="card-body">
+        <div class="row ">
+            <div class="col-md-12 mb-4">
+                <table class="table table-responsive-sm table-sm">
+                    <thead>
+                        <tr>
+                            <th>ID</th>
+                            <th>Tarih</th>
+                            <th>Makbuz No</th>
+                            <th>Açıklama</th>
+                            <th>Kurban Fiyatı</th>
+                            <th>Alınan Ödeme / Kapora</th>
+                            <th>Ödeme Toplamı  <button class="btn btn-secondary" type="button" data-toggle="tooltip" data-html="true" title="" data-original-title="Kasaya Giren Para">?</button>
+                            </th>
+                         
+                            <th>Bizim Borcumuz
+                                <button class="btn btn-secondary" type="button" data-toggle="tooltip" data-html="true" title="" data-original-title="Sizin Ödemeniz Gereken Miktar (Bizim Borcumuz(ALACAK BAKİYESİ))">?</button>
+                            </th>
+
+                            <th>Kalan Borcu <button class="btn btn-secondary" type="button" data-toggle="tooltip" data-html="true" title="" data-original-title="kalan Ödeme Miktarı(Kalan Borç (BORÇ BAKİYESİ))">?</button>
+                            </th>
+                          
+                           
+                            <th>İşlemler</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {% for odemeler in post.Odemeler %}
+
+                       
+                        <tr  {% if odemeler.BorcDurum == 13  %} style="text-decoration:line-through;color: red;"     {% endif %}  {% if odemeler.BorcDurum == 14  %} style="color: green;"{% endif %} > 
+                          
+                            <td class="alert alert-success"><strong>{{odemeler.ID}}</strong></td>  <!-- ID -->
+                           
+                            <td> {{tarih.OnlyDate(odemeler.VerildigiTarih.String())}} </td> <!-- Tarih -->
+                          
+                          
+                            <td> {{odemeler.Makbuz}} </td>   <!-- Makbuz No -->
+
+                            <!-- Açıklama -->
+                            <td {% if odemeler.BorcDurum == 3  %} class="alert alert-primary" {% endif %} 
+                            {% if odemeler.BorcDurum == 10  %} class="alert alert-danger" {% endif %} 
+                            {% if odemeler.BorcDurum == 11  %} class="alert alert-warning" {% endif %} > 
+                             {{odemeler.Aciklama}} 
+                            </td>
+
+                            <!-- Kurban Fiyatı -->
+                            {% if odemeler.KurbanFiyati == -1.000000  %}
+                            <td class="alert alert-warning"> Henüz hayvan atanmamıştır</td>
+                            {% else  %}
+                            <td {% if odemeler.BorcDurum == 10  %} class="alert alert-danger" {% endif %} {% if odemeler.BorcDurum == 11  %} class="alert alert-warning" {% endif %}>  <span class="odemelerList">{{odemeler.KurbanFiyati|stringformat:"%.2f"}} </span> ₺</td>
+                            {% endif %}
+
+
+
+                                   <!-- Alınan Ücret / Kapora -->
+                                   {% if odemeler.VerilenUcret == -1.000000  %}
+                                   <td> 0.00 ₺</td>
+                                   {% else  %}
+                                   <td  {% if odemeler.BorcDurum == 2  %} class="alert alert-info" {% endif %}> 
+                                       <span class="odemelerList"> {{odemeler.VerilenUcret|stringformat:"%.2f"}} </span> ₺
+                                  </td>
+                                   {% endif %}
+
+
+                            <!-- Ödeme Toplamı -->
+                            {% if odemeler.Bakiye == -1.000000  %}
+                            <td> 0.00 ₺</td>
+                            {% else  %}
+                            <td> <span class="odemelerList">{{odemeler.Bakiye|stringformat:"%.2f"}} </span> ₺</td>
+                            {% endif %}
+                            
+                 
+                     
+
+
+                       <!-- Bizim Borcumuz -->
+                            {% if odemeler.Borc == -1.000000  %}
+                            <td > 0.00 ₺</td>
+                            {% else  %}
+                            <td  {% if odemeler.BorcDurum == 3  %} class="alert alert-primary" {% endif %}>  <span class="odemelerList">{{odemeler.Borc|stringformat:"%.2f"}} </span> ₺</td>
+                            {% endif %}
+
+                        <!-- Kalan Borcu -->
+                            {% if odemeler.Alacak == -1.000000  %}
+                            <td> 0.00 ₺</td>
+                            {% else  %}
+                            <td  {% if odemeler.BorcDurum == 10 || odemeler.BorcDurum == 11  %} class="alert alert-success" {% endif %} > <span class="odemelerList">{{odemeler.Alacak|stringformat:"%.2f"}} </span> ₺</td>
+                            {% endif %}
+
+                     
+                         <!-- İşlemler -->
+                            <td>
+                                  {% if odemeler.BorcDurum == 2 ||  odemeler.BorcDurum == 4 ||   odemeler.BorcDurum == 6    %} 
+                                  <a class="btn btn-success" href="/admin/odemeler/makbuz/{{odemeler.ID}}" data-toggle="tooltip" data-html="true" title="" data-original-title="Makbuz çıktısı oluşturur">Makbuz</a> 
+                                  <a class="btn btn-warning" href="/admin/odemeler/delete/{{odemeler.ID}}?kid={{odemeler.KurbanID}}" data-toggle="tooltip" data-html="true" title="" data-original-title="Ödemeyi Siler">Sil</a> 
+                                  {% endif %} 
+                            </td>
+                            
+
+                        </tr>
+
+                        {% endfor %}
+                    </tbody>
+                </table>
+                <hr> 
+                + {{kurbanOdenenMiktar|stringformat:"%.2f"}} ₺ Toplam Taksit Ödemesi yapılmış
+                <br>
+            </div>
+        </div>
+
+    </div>
+</div>

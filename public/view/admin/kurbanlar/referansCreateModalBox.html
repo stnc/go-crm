@@ -1,0 +1,66 @@
+
+{% set routerName = 'admin/kisiler' %}
+<form method="POST" action="/{{routerName}}/kisiEkleAjax" accept-charset="UTF-8" class="form-control1" id="personAdd" enctype="multipart/form-data">
+    <input name="_csrf" type="hidden" value="{{ csrf }}">
+
+    <input name="viewID" type="hidden" value="{{ viewID }}">
+ 
+
+            <div class="row">
+                <div class="col-md-12">
+                    <div class="card">
+                   
+
+
+                        <div class="card-body">
+
+                            <div class="form-group">
+                                <label for="AdSoyad">Adı Soyadı</label>
+                              
+                                
+                                <input class="form-control {{err.AdSoyad_valid}} AdSoyad"  name="AdSoyad" value="{{adSoyad}}"  data-rule-required="true"
+                                 data-msg-required="Lütfen ad ve soyadı bilgilerini giriniz" data-msg-email="Lütfen Ad ve soyadı bilgilerini giriniz">
+
+                                
+                                {% if err.AdSoyad_error %}
+                                <div class="invalid-feedback" style="display:block">{{err.AdSoyad}}</div>
+                                {% endif %}
+                            </div>
+
+                            <div class="form-group">
+                                <label for="Telefon">Telefon</label>
+                                <input class="form-control {{err.Telefon_valid}} Telefon" name="Telefon" value="{{post.Telefon}}" type="text" placeholder="Telefon"
+                                data-rule-required="true"
+                                 data-msg-required="Lütfen telefon bilgilerini giriniz" data-msg-email="Lütfen telefon bilgilerini giriniz"> {% if err.Telefon_error %}
+                                <div class="invalid-feedback" style="display:block">{{err.Telefon}}</div>
+                                {% endif %}
+                            </div>
+
+                            <div class="form-group">
+                                <label for="Adres"> Adresi
+                                </label>
+                                <textarea class="form-control {{err.Adres_valid}}" id="Adres" name="Adres"
+                                    rows="2">{{ post.Adres }}</textarea>
+                            </div>
+        
+                            <div class="card-footer">
+                                <button class="btn btn-sm btn-success stnc float-right" type="submit"> Kaydet</button>
+                                <!-- <button class="btn btn-sm btn-danger" type="reset"> VAZGEÇ</button> -->
+                            </div>
+
+                        </div>
+                    </div>
+                </div>
+         
+
+    </div>
+</form>
+
+
+<script type="text/javascript">
+$(function() { //shorthand document.ready function
+    $('.Telefon').mask("0000 000 0000", {placeholder: "____ ___-____"}).change();
+});
+</script>
+
+

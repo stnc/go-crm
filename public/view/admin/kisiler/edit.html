@@ -1,0 +1,55 @@
+{% extends "../app.html" %} 
+{% block content %} 
+{% set RootName = 'admin-kisiler' %}
+ {% set routerName ='admin/kisiler' %}
+
+
+{% include "../viewComponents/alertMsg.html"%}
+
+
+<div class="row">
+    <div class="col-md-12 mb-4">
+        <ul class="nav nav-tabs" role="tablist">
+            <li class="nav-item"><a class="nav-link  {%if actionHref=='ekle' %}  active  {% endif %}" data-toggle="tab" href="#ekle" role="tab" aria-controls="ekle"
+                    aria-selected="true">
+                    <svg class="c-icon">
+                        <use xlink:href="/assets/admin/vendors/@coreui/icons/svg/free.svg#cil-calculator"></use>
+                    </svg> Kişi Düzenleme </a></li>
+
+
+          
+                    <li class="nav-item"><a class="nav-link  {%if actionHref=='kurbanlari' %}  active  {% endif %}" data-toggle="tab" href="#kurbanlari" role="tab" aria-controls="kurbanlari"
+                    aria-selected="false">
+                    <svg class="c-icon">
+                        <use xlink:href="/assets/admin/vendors/@coreui/icons/svg/free.svg#cil-chart-pie"></use>
+                    </svg> Kişinin Kurbanları </a></li>
+
+              
+
+        </ul>
+        <div class="tab-content">
+            <div class="tab-pane   {%if actionHref=='ekle' %}  active  {% endif %}" id="ekle" role="tabpanel">
+                {% include "IncludeEdit.html"%}
+            </div>
+
+            <div class="tab-pane   {%if actionHref=='kurbanlari' %}  active  {% endif %}" id="kurbanlari" role="tabpanel">
+                
+                {% include "kisiKurbanlari.html"%}
+            </div>
+
+        </div>
+    </div>
+</div>
+
+{% endblock %}
+
+
+{% block jsInline %}
+<script src="/assets/admin/js/bootstrap-select.min.js"></script>
+<script src="/assets/admin/js/jquery.mask.min.js"></script>
+<script src="/assets/admin/js/ajax-bootstrap-select.min.js"></script>
+<script src="/assets/admin/js/eModal.min.js"></script>
+<script src="/assets/admin/js/jquery.validate.min.js"></script>
+
+{% include "kisiJS.html"%}
+{% endblock %}

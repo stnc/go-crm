@@ -1,0 +1,87 @@
+{% extends "appOpen.html" %}
+{% block content %}
+
+{%if durum %}  
+
+
+<div class="row">
+  <div class="col-sm-12 col-xl-6">
+    <div class="card">
+      <div class="card-header">{{post.AdSoyad}} Kurban Bilgileri</div>
+      <div class="card-body">
+        <ul class="list-group">
+            <li class="list-group-item">Kişi Adı: <strong>{{post.AdSoyad}}</strong> </li>
+            <li class="list-group-item">Sıra No: <strong>{{post.KesimNo}}</strong> </li>
+            <li class="list-group-item">Kurban Fiyatı <strong>{{post.KurbanFiyati|stringformat:"%.2f"}}</strong> TL</li>
+            <li class="list-group-item">Kalan Borcunuz <strong>{{post.KurbanAlacak|stringformat:"%.2f"}}</strong> TL</li>
+            <li class="list-group-item">Toplam Ödemeniz <strong>{{post.KurbanBakiye|stringformat:"%.2f"}}</strong> TL</li>
+            <li class="list-group-item">Bizden Alacağınız <strong>{{post.KurbanBorc|stringformat:"%.2f"}}</strong> TL</li>
+            <li class="list-group-item">Toplam Kilo <strong>{{post.HayvanAgirlik}} KG</strong> </li>
+            <!-- <li class="list-group-item">Tahmini Kişi Başı Kilo <strong> {{kisiBasiKilo}} KG</strong> </li> -->
+            <li class="list-group-item">Hissedar adeti <strong>{{post.HissedarAdet}}</strong> </li>
+          </ul>
+      </div>
+    </div>
+  </div>
+
+  <div class="col-sm-12 col-xl-6">
+    <div class="card">
+      <div class="card-header">Diğer grup üyeleri</div>
+      <div class="card-body">
+        <ul class="list-group">
+          {% for grupData in gruplar %}
+             <li class="list-group-item"> <strong class="text-center">{{forloop.Counter}}: </strong> {{grupData.KisiAdSoyad}} </li>
+          {% endfor %}
+
+          </ul>
+      </div>
+    </div>
+  </div>
+
+  <div class="col-sm-12 col-xl-12">
+    <div class="card lightbox-gallery">
+      <div class="card-header"> Kurbanınız [Resmi büyütmek için tıklayın]</div>
+      <div class="card-body">
+     
+      <div class="row photos">
+ 
+
+          {% for mediaData in media %}
+          <div class="col-sm-6 col-md-4 col-lg-3 item"><a 
+            href="/upload/hayvanBilgisi/big/{{mediaData.MediaName}}" data-lightbox="photos"><img class="img-fluid"  src="/upload/hayvanBilgisi/big/{{mediaData.MediaName}}"></a></div>
+           {% endfor %}
+
+
+
+    </div>
+    
+    </div>
+    </div>
+  </div>
+
+
+</div>
+
+
+
+{% else %}  
+
+<div class="row">
+  <div class="col-md-12">
+      <div class="alert alert-warning alert-dismissible">
+          <button type="button" class="close" data-dismiss="alert" aria-hidden="true">×</button>
+          <h5><i class="icon fas fa-check"></i> Uyarı!</h5>
+         Atanmış Kurban veya Veri Bulunamadı
+      </div>
+  </div>
+</div>
+
+{% endif %}
+
+{% endblock %}
+
+
+{% block jsInline %}
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/lightbox2/2.8.2/css/lightbox.min.css">
+<script src="https://cdnjs.cloudflare.com/ajax/libs/lightbox2/2.8.2/js/lightbox.min.js"></script>
+{% endblock %}

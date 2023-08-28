@@ -1,0 +1,161 @@
+<script type="text/javascript">
+
+    var options2 = {
+        ajax: {
+            url: '/admin/kisiler/kisiAra',
+            type: 'POST',
+            dataType: 'json',
+            data: {
+                q: "{{ '{{{q}}}' }}",
+                _csrf: '{{ csrf }}',
+            }
+        },
+        locale: {
+            emptyTitle: 'Aranacak kişiyi yazınız',
+            currentlySelected: 'Seçilen Kişi',
+            errorText: 'Veri yok',
+            searchPlaceholder: 'Kişi Ara',
+            statusInitialized: 'Arama yapılacak kişiyi yazınız <br> <a href="#" onclick="kisiEkleAjaxRequest(event, 2)">Yeni Kişi Eklemek İçin Tıklayın</a>',
+            statusNoResults: 'Bulunamadı <a href="#" onclick="kisiEkleAjaxRequest(event, 2)">Yeni Kişi Eklemek İçin Tıklayın</a>',
+            statusSearching: 'Aranıyor....',
+            statusTooShort: 'Çok kısa kelime....',
+
+        },
+        log: 0,
+        preprocessData: function (data) {
+            var i, l = data.length,
+                array = [];
+            if (l) {
+                for (i = 0; i < l; i++) {
+                    array.push($.extend(true, data[i], {
+                        text: data[i].adSoyad + ' Telefon:' + data[i].tel,
+                        value: data[i].id,
+                        data: {
+                            subtext: 'Telefon:' + data[i].tel,
+                        }
+                    }));
+                }
+            }
+            return array;
+        },
+
+    };
+
+
+
+    $('.selectpicker2').selectpicker().filter('.with-ajax').ajaxSelectPicker(options2);
+
+    // $(document).ready(function () {
+    //     $('.fa-cloud' ).on( "click",   function(e) { ajaxDemo(e)} );
+    //  });
+
+    function kisiEkleAjaxRequest(e, val) {
+        e = e || window.event;
+        e.preventDefault();
+        metin=$("#gr-Kisi"+val+" input").val();
+  
+        var title = 'Kişi Ekleme';
+        var pars = Math.floor((Math.random() * 7) + 1);
+        var params = {
+            buttons: [{
+                text: 'Kapat',
+                close: true,
+                style: 'danger'
+            },
+                //  { text: 'New content', close: false, style: 'success', click: kisiEkleAjaxRequest }
+            ],
+            size: eModal.size.lg,
+            title: title,
+            url: '/admin/kurban/referansCreateModalBox/' + val +"?metin="+metin
+        };
+
+        return eModal
+            .ajax(params)
+            .then(Telefon());
+    }
+
+ 
+
+    function Telefon() {
+        setTimeout(function () {
+            $('.Telefon').mask("0000 000 0000", {
+                placeholder: "____ ___-____"
+            }).change()
+        }, 500);
+    }
+
+
+    $(function () { //shorthand document.ready function
+
+        $('#Telefon').mask("0000 000 0000", {
+            placeholder: "____ ___-____"
+        }) //    $('.phone_with_ddd').mask('(00) 0000-0000');
+
+
+
+        $('.odemelerList').mask('###0.00', {
+            reverse: true
+        });
+
+        $('.formatlaDecimal').mask('###0.00', {
+            reverse: true
+        });
+
+
+        //modal sayfası için 
+        $('#VerilenUcret').mask('###0.00', {
+            reverse: true
+        }); //#.##0.00 eskisi 
+
+
+
+        $(document).on('submit', 'form#personAdd', function (e) {
+            e.preventDefault()
+
+            var validator = $("#personAdd").validate({
+                errorClass: "error is-invalid",
+                validClass: "valid success-alert"
+            });
+            validator.form();
+
+            if (validator) {
+
+                var form = $(this);
+                var url = form.attr('action');
+
+                $.ajax({
+                    type: "POST",
+                    url: url,
+                    data: form.serialize(),
+                    dataType: 'json',
+                    success: function (data) {
+                        if (data.status == "ok") {
+                            eModal.close();
+                            $(".gr-Kisi" + data.viewID + " .filter-option-inner-inner").text(data.username + ' Tel:' + data.tel);
+
+                            $("select.selectpicker" + data.viewID + ".with-ajax.form-control ").html("<option value=" + data.lastID + ">" + data.username + "</option>");
+                        }
+                    },
+                });
+            }
+
+            e.preventDefault();
+
+            return false;
+
+        });
+
+
+
+    });
+
+   
+
+
+    $('.kisiKaldir').click(function(){
+        let idAdres = $(this).data('id');
+        $(".selectpicker"+idAdres).val(0).selectpicker("refresh");
+    });
+
+
+</script>

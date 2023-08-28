@@ -1,0 +1,347 @@
+{% extends "../app.html" %} 
+{% block content %} 
+{% set RootName = 'admin-gruplar' %}
+ {% set routerName = 'admin/gruplar' %}
+
+
+
+ {% include "../viewComponents/alertMsg.html"%}
+
+<!-- <div class="row">
+    <div class="col-6 col-lg-3">
+        <div class="card">
+            <div class="card-body p-3 d-flex align-items-center">
+                <div class="bg-gradient-primary p-3 mfe-3">
+                    <svg class="c-icon c-icon-xl">
+        <use xlink:href="/assets/admin/vendors/@coreui/icons/svg/free.svg#cil-settings"></use>
+        </svg>
+                </div>
+                <div>
+                    <div class="text-value text-primary">$1.999,50</div>
+                    <div class="text-muted text-uppercase font-weight-bold small">Widget title</div>
+                </div>
+            </div>
+            <div class="card-footer px-3 py-2"><a class="btn-block text-muted d-flex justify-content-between align-items-center" href="#"><span class="small font-weight-bold">View More</span>
+        <svg class="c-icon">
+        <use xlink:href="/assets/admin/vendors/@coreui/icons/svg/free.svg#cil-chevron-right"></use>
+        </svg></a></div>
+        </div>
+    </div>
+    <div class="col-6 col-lg-3">
+        <div class="card overflow-hidden">
+            <div class="card-body p-0 d-flex align-items-center">
+                <div class="bg-gradient-primary py-4 px-5 mfe-3">
+                    <svg class="c-icon c-icon-xl">
+        <use xlink:href="/assets/admin/vendors/@coreui/icons/svg/free.svg#cil-settings"></use>
+        </svg>
+                </div>
+                <div>
+                    <div class="text-value text-primary">$1.999,50</div>
+                    <div class="text-muted text-uppercase font-weight-bold small">Widget title</div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="col-6 col-lg-3">
+        <div class="card overflow-hidden">
+            <div class="card-body p-0 d-flex align-items-center">
+                <div class="bg-gradient-danger py-4 px-5 mfe-3">
+                    <svg class="c-icon c-icon-xl">
+        <use xlink:href="/assets/admin/vendors/@coreui/icons/svg/free.svg#cil-settings"></use>
+        </svg>
+                </div>
+                <div>
+                    <div class="text-value text-danger">$1.999,50</div>
+                    <div class="text-muted text-uppercase font-weight-bold small">Widget title</div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+
+    <div class="col-6 col-lg-3">
+        <div class="card overflow-hidden">
+            <div class="card-body p-0 d-flex align-items-center">
+                <div class="bg-gradient-warning py-4 px-5 mfe-3">
+                    <svg class="c-icon c-icon-xl">
+        <use xlink:href="/assets/admin/vendors/@coreui/icons/svg/free.svg#cil-settings"></use>
+        </svg>
+                </div>
+                <div>
+                    <div class="text-value text-warning">$1.999,50</div>
+                    <div class="text-muted text-uppercase font-weight-bold small">Widget title</div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div> -->
+
+<form method="POST" action="/{{routerName}}/update" accept-charset="UTF-8" class="form-control1" id="{{RootName}}-store"
+    enctype="multipart/form-data">
+    <input name="Siralama" type="hidden" value="1">
+    <input name="_csrf" type="hidden" value="{{ csrf }}">
+    <input name="durum" type="hidden" value="{{post.Durum}}">
+    <input name="_method" type="hidden" value="PUT">
+    <input class="form-control {{err.ID}}" id="ID" name="ID" value="{{post.ID}}" type="hidden">
+    <input type="hidden" value="{{ post.SatisFiyatTuru }}" id="SatisFiyatTuru" name="SatisFiyatTuru">
+    <div class="row">
+      
+        <div class="col-md-4">
+             <div class="card">
+                        <div class="card-header"> 
+                            <strong>
+                                {% if title %} {{ title }} - 
+                                {% else %} STNC OTOMASYON SİSTEMi
+                                {% endif %}
+                            </strong>
+                            <small>Form</small>
+                        </div>
+                        <div class="card-body">
+
+                            <div class="form-group">
+                                <label for="KesimSiraNo">Kesim Sira No</label>
+                                <input class="form-control {{err.KesimSiraNo_valid}}" id="KesimSiraNo"
+                                    name="KesimSiraNo" readonly value="{{post.KesimSiraNo}}" type="text">
+                                {% if err.KesimSiraNo_error %}
+                                <div class="invalid-feedback" style="display:block">{{err.KesimSiraNo}}</div>
+                                {% endif %}
+                            </div>
+
+
+                            <div class="form-group">
+                                <label for="GrupAdi">Grup Adı  [ Örnek: Erdoğdu Ailesi ]</label>
+                                <input class="form-control {{err.GrupAdi_valid}}" id="GrupAdi"
+                                    name="GrupAdi"  value="{{post.GrupAdi}}" type="text">
+                                {% if err.GrupAdi_error %}
+                                <div class="invalid-feedback" style="display:block">{{err.GrupAdi}}</div>
+                                {% endif %}
+                            </div>
+
+                            <div class="form-group">
+                                <label for="HayvanBilgisiID">Hayvan Bilgisi ID</label>
+                                <!-- <select class="form-control {{err.HayvanBilgisiID_valid}}" name="HayvanBilgisiID"
+                                    id="HayvanBilgisiID">
+                                    {% for hayvan in hayvanlar %}
+                                    <option {%if post.HayvanBilgisiID==hayvan.ID %} selected {% endif %}
+                                        value="{{hayvan.ID}}">Küpe: {{hayvan.KupeNo}} / {{hayvan.Agirlik}} KG</option>
+                                    {% endfor %}
+                                </select> -->
+
+                                <input class="form-control {{err.HayvanBilgisiID_valid}}" id="HayvanBilgisiID"
+                                name="HayvanBilgisiID" readonly value="{{post.HayvanBilgisiID}}" type="text">
+                                {% if err.HayvanBilgisiID_error %}
+                                <div class="invalid-feedback" style="display:block">{{err.HayvanBilgisiID}}</div>
+                                {% endif %}
+                             
+                            </div>
+                            <script id="cartSelectItemsTpl" type="text/x-handlebars-template">
+                                {% verbatim %}
+                                    <ul class="list-group">
+                                    <li class="list-group-item active">Hayvan Bilgileri</li>
+                                    <li class="list-group-item list-group-item-action"><strong>Ağırlık:</strong> {{jsonData.agirlik}} KG</li>
+                                    <li class="list-group-item list-group-item-action"><strong>Küpe NO :</strong>{{jsonData.kupeNo}} </li>
+                                    <li class="list-group-item list-group-item-action"><strong>Satın alındığı Ahır :</strong>{{jsonData.hayvanSatisYerleri.yer_adi}} </li>
+
+                                    {{#if_eq jsonData.SatisFiyatTuru 1}} 
+                                    <li class="list-group-item list-group-item-action">
+                                      <div class="row">
+                                        <div class="col-md-10"> 
+                                            <strong>Satış Fiyatı: </strong>
+                                            {{jsonData.satisFiyati1}} TL x  {{jsonData.agirlik}} KG =  {{jsonData.fiyat1}} TL<br> 
+                                            <small>kişi başı düşen fiyat: {{jsonData.kisiBasiDusen1}} TL</small></div>
+                                            <div class="col-md-2">
+                                        </div>
+                                      </div>
+                                    </li>
+                                        {{/if_eq}}
+
+                                        {{#if_eq jsonData.SatisFiyatTuru 2}} 
+                                    <li class="list-group-item list-group-item-action">
+                                            <div class="row">
+                                                <div class="col-md-10">  
+                                                    <strong>Satış Fiyatı: </strong>
+                                                    {{jsonData.satisFiyati2}} TL x  {{post.agirlik}} KG =  {{jsonData.fiyat2}} TL<br> 
+                                                    <small>kişi başı düşen fiyat: {{jsonData.kisiBasiDusen2}} TL</small></div>
+                                                    <div class="col-md-2">
+                                                    </div>
+                                            </div>
+                                        
+                                        
+                                        </li>
+                                        {{/if_eq}}
+
+                                   {{#if_eq jsonData.SatisFiyatTuru 3}} 
+                                    <li class="list-group-item list-group-item-action">
+                                        <div class="row">
+                                            <div class="col-md-10">  <strong>Satış Fiyatı : </strong>
+                                                {{jsonData.satisFiyati3}} TL x  {{jsonData.agirlik}} KG =  {{jsonData.fiyat3}} TL<br> <small>kişi başı düşen fiyat: {{jsonData.kisiBasiDusen3}} TL</small></div>
+                                                <div class="col-md-2">
+                                                </div>
+                                           </div>
+                                    </li>
+                                 {{/if_eq}}
+
+                                    <li class="list-group-item list-group-item-action"><strong>Ahır Sahibi / Tel  :</strong>
+                                            {{jsonData.hayvanSatisYerleri.ilgiliKisi}} / {{post.hayvanSatisYerleri.telefon}}   </li>
+
+                                            <li class="list-group-item list-group-item-action"> <a href=/admin/hayvanBilgisi/edit/{{jsonData.id}}>Hayvan Bilgisini Düzenle</a>  </li>        
+                                   </ul> 
+                               {% endverbatim %}
+                            </script>
+                            <div id="cartSelectItems" class="card-body-"></div>
+
+                            <div class="form-group">
+                                <label for="ToplamKurbanFiyati">Kurban Fiyati  [otomatik olarak fiyat 1 seçilir]</label>
+                                <input class="form-control {{err.ToplamKurbanFiyati_valid}}" id="ToplamKurbanFiyati"
+                                    name="ToplamKurbanFiyati" readonly value="{{post.ToplamKurbanFiyati|floatformat:2}}" type="text">
+                                  
+                                    <input type="hidden"  value="{{ post.Agirlik }}" id="Agirlik" name="Agirlik">
+                                    {% if err.ToplamKurbanFiyati_error %}
+                                <div class="invalid-feedback" style="display:block">{{err.ToplamKurbanFiyati}}</div>
+                                {% endif %}
+                            </div>
+
+                     
+
+                            <div class="form-group">
+                                <label for="AgirlikTipi">Ağırlık Tipi</label>
+                                <select class="form-control" name="AgirlikTipi" id="AgirlikTipi">
+                               
+                                    <option {%if post.AgirlikTipi==1 %} selected {% endif %} value="1">Küçük Ağırlık
+                                    </option>
+                                    <option {%if post.AgirlikTipi==2 %} selected {% endif %} value="2">Orta Ağırlık
+                                    </option>
+                                    <option {%if post.AgirlikTipi==3 %} selected {% endif %} value="3">Büyük Ağırlık
+                                    </option>
+                                </select>
+                            </div>
+                      
+                            <div class="form-group">
+                                <label for="HissedarAdet">Hissedar Adeti</label>
+                                <input class="form-control {{err.HissedarAdet_valid}}" id="HissedarAdet"
+                                    name="HissedarAdet" readonly value="{{hisseAdeti}}" type="text">
+                                {% if err.HisseFiyati_error %}
+                                <div class="invalid-feedback" style="display:block">{{err.HissedarAdet}}</div>
+                                {% endif %}
+                            </div>
+                        </div>
+             </div>
+        </div>
+     
+        <div class="col-md-4">
+             <div class="card">
+                        <div class="card-header"> <strong>Diğer Bilgiler</strong>
+                        </div>
+                        <div class="card-body">
+                            <div class="form-group">
+                                <label for="Aciklama">Kısa açıklama</label>
+                                <textarea class="form-control {{err.Aciklama_valid}}" id="Aciklama" name="Aciklama"
+                                    rows="4">{{ post.Aciklama }}</textarea>
+                            </div>
+                            <input 
+                             name="KurbanBayramiYili" value="{{kurbanYili}}" type="hidden">
+
+                            <!-- <div class="form-group">
+                                <label for="KurbanBayramiYili">Kurban Bayrami Yili</label>
+                                <input class="form-control {{err.KurbanBayramiYili_valid}}" id="KurbanBayramiYili"
+                                    readonly name="KurbanBayramiYili" value="{{kurbanYili}}" type="text">
+                                {% if err.KurbanBayramiYili_error %}
+                                <div class="invalid-feedback" style="display:block">{{err.KurbanBayramiYili}}</div>
+                                {% endif %}
+                            </div> -->
+                        </div>
+           </div> 
+        </div>
+      
+        <div class="col-md-4">
+            <div class="row">
+                <div class="col-md-12">
+                    <div class="card">
+                        <div class="card-header"> <strong>Bu kurbana Kayıtlı Kişiler </strong>
+                        </div>
+                        <div class="card-body">
+                            <!-- {% for kurban in post.Kurban %}
+                                {{kurban.Agirlik}} 
+                                <br>
+                            {% endfor %} -->
+                        </div>
+                    </div>
+                </div>
+                <div class="col-md-12">
+                    <div class="card">
+                        <div class="card-body">
+                            <input class="form-control {{err.ID}}" id="ID" name="ID" value="{{post.ID}}" type="hidden">
+                            <button class="btn btn-sm btn-primary" type="submit">Kaydet</button>
+                            
+                            <button class="btn btn-sm btn-danger" type="reset">VAZGEÇ</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        
+    </div>
+
+</form>
+{% endblock %}
+
+{% block jsInline %}
+<!-- <link href="//cdnjs.cloudflare.com/ajax/libs/font-awesome/5.13.0/css/all.min.css" rel="stylesheet" /> -->
+
+<script src="/assets/admin/js/handlebars.min-v4.7.7.js"></script>
+<script src="/assets/admin/js/handleBarHelpers.js"></script>
+<script type="text/javascript">
+
+
+    $(document).ready(function () {
+
+        let id = $("#HayvanBilgisiID").val()
+        ajaxCall(id)
+
+        $(document).on("click", ".fiyatBtn", function () {
+            event.preventDefault();
+           $("#ToplamKurbanFiyati").val($(this).val())
+           $("#AgirlikTipi").val( $(this).attr("tipi"))
+           $("#Agirlik").val( $(this).attr("agirlik"))
+        });
+
+        $('#HayvanBilgisiID').change(function () {
+            ajaxCall(this.value)
+        });
+    });
+
+    function ajaxCall(id) {
+        fetch("/admin/hayvanBilgisi/hayvanListeAjax/" + id, {
+            method: 'GET',
+            headers: { 'X-Requested-With': 'XMLHttpRequest' }
+        })
+            .then(response => {
+                if (response.ok) {
+                    return response.json()
+                } else {
+                    console.log("error")
+                }
+            })
+            .then(data => {
+
+                console.log(data)
+
+
+
+                jQuery('#cartSelectItems').empty();
+                let cartSelectTemplate = jQuery('#cartSelectItemsTpl').html();
+                let TemplateCompileCartSelect = Handlebars.compile(cartSelectTemplate);
+                let CompiledHtmlCartSelect = TemplateCompileCartSelect(data);
+                jQuery('#cartSelectItems').html(CompiledHtmlCartSelect);
+                
+                $("#ToplamKurbanFiyati").val(jsonData.post.fiyat1)
+                $("#AgirlikTipi").val(1)
+
+            })
+            .catch((error) => {
+                console.log("error")
+            });
+    }
+</script>
+{% endblock %}

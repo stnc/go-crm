@@ -1,0 +1,112 @@
+{% extends "../app.html" %}
+{% block content %}
+{% set RootName = 'admin-kisiler' %}
+{% set routerName = 'admin/kisiler' %}
+{% include "../viewComponents/alertMsg.html"%}
+
+
+<div class="row">
+    <div class="col-lg-12">
+        <div class="card">
+            <div class="card-header"><i class="fa fa-align-justify"></i> {{title}} Listesi</div>
+            <div class="card-body">
+                <div class="row">
+
+                    <div class="col-4 col-sm-4 col-md-2  mb-3 mb-xl-0">
+                      <a class="btn btn-block btn-primary" href="/admin/kisiler/create">Yeni Kişi Ekle </a>
+                  </div>
+                  
+                  </div>
+                  <hr>
+                <table class="go-datatable table table-striped table-bordered">
+                    <thead>
+                        <tr>
+                            <th>ID</th>
+                            <th>Ad Soyad</th>
+                            <th>Telefon</th>
+                            <th>Adres</th>
+                            <th>Düzenle</th>
+                        </tr>
+                    </thead>
+                </table>
+            </div>
+        </div>
+    </div>
+
+</div>
+
+
+<!-- Modal -->
+<div class="modal fade" id="kisiModal" tabindex="-1" role="dialog" aria-labelledby="kisiModalLabel" aria-hidden="true">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="kisiModalLabel">Onaylama</h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body">
+                Silme İşlemini Onaylıyor musunuz?
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-dismiss="modal">Kapat</button>
+                <a href="" class="btn btn-primary">Evet Onaylıyorum</a>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+{% endblock %}
+{% block jsInline %}
+<script src="/assets/admin/js/jquery.dataTables.min.js"></script>
+<script src="/assets/admin/js/jquery.dataTables.datetime.js"></script>
+<script src="/assets/admin/js/dataTables.bootstrap4.min.js"></script>
+<link href="/assets/admin/css/dataTables.bootstrap4.min.css" rel="stylesheet">
+<script>
+    $(document).ready(function () {
+        var table = $('.go-datatable').DataTable({
+            language: {
+                url: '/assets/admin/js/jquery.dataTablesTr.json'
+            },
+            processing: true,
+            serverSide: true,
+            ajax: {
+                url: "/{{routerName}}/listDataTable",
+            },
+            columns: [
+
+                { data: "ID" },
+                { data: "AdSoyad" },
+                { data: "Telefon" },
+                { data: "Adres" },
+                {
+                    data: 'ID',
+                    render: function (data, type, row, meta) {
+                        return type === 'display' ?
+                            '<a href="/{{routerName}}/edit/' + data + '" >Düzenle</a> || <button data-id="' + data + '" class="btn btn-sm btn-warning kisiModal">SİL</button> ' :
+                            data;
+                    }
+                },
+
+            ],
+            pageLength: 20,
+            responsive: true,
+        });
+
+
+
+        //Sİlme onayı 
+        $(document).on("click", ".kisiModal", function (e) {
+            e.preventDefault();
+            let idAdres = $(this).data('id');
+            $('#kisiModal .modal-footer a').attr('href', '/{{routerName}}/delete/' + idAdres);
+            $('#kisiModal').modal('show');
+        });
+
+    });
+
+
+</script>
+{% endblock %}

@@ -1,0 +1,356 @@
+{% extends "../appPaper.html" %}
+{% block content %}
+{% set RootName = 'admin-kurban' %}
+{% set routerName = 'admin/kurban'%}
+
+<div class="card gizle">
+    <div class="card-header">
+        <strong>Makbuz Hazırlama Arayüzü </strong>
+
+
+        <button type="button" class="btn btn-block btn-danger " id="yazdir">
+            Yazdır
+        </button>
+    </div>
+</div>
+
+<div class="container" id="printJS-form">
+
+
+
+    <div class="row sheet padding-10mm ">
+
+
+
+
+        <div class="col-sm-7 ">
+
+            <div class="row">
+                <div class="col-sm-6 mb-6 ">
+                    <strong class="printFont">Sıra No: {{makbuz.KesimNo}}</strong>
+                </div>
+
+                <div class="col-sm-6 mb-6 ">
+                    <strong class="printFont">No: <span class="Makbuztxt">{{makbuz.Makbuz}}</span></strong>
+                    <div class="form-group row gizle">
+                        <div class="col-sm-6">
+                            <input class="form-control form-control-sm Makbuz" type="text" value="{{makbuz.Makbuz}}"
+                                placeholder="{{makbuz.Makbuz}}">
+                            <code>Yazıcıda Görünmez - düzenleme alanı </code>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="row">
+                <div class="col-sm-12 mb-4">
+
+                </div>
+
+                <div class="col-sm-12 mb-4">
+                    <strong class="printFont">Tarih: {{tarih}}</strong>
+                </div>
+            </div>
+            <div class="row">
+                <div class="col-sm-12  text-center">
+
+                </div>
+                <div class="col-sm-12 mb-4">
+                    <strong class="printFont"> Tutar </strong> <span
+                        class="printFont OdemelerVerilenUcrettxt">{{makbuz.OdemelerVerilenUcret|stringformat:"%.2f"}}</span>
+                    TL
+                    <div class="form-group row gizle">
+                        <div class="col-sm-4">
+                            <input class="form-control form-control-sm OdemelerVerilenUcret" type="text"
+                                value="{{makbuz.OdemelerVerilenUcret|stringformat:'%.2f'}}"
+                                placeholder="{{makbuz.OdemelerVerilenUcret|stringformat:'%.2f'}}">
+                            <code>Yazıcıda Görünmez - düzenleme alanı </code>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-sm-12  text-center">
+
+                </div>
+
+
+                <div class="col-sm-12  text-center">
+
+                </div>
+            </div>
+            <div class="row">
+                <div class="col-sm-12 mb-4">
+                    <strong class="printFont">Sayın:</strong> <span
+                        class="printFont AdSoyadStxt">{{makbuz.AdSoyad}}</span>
+                    <div class="form-group row gizle">
+                        <div class="col-sm-3">
+                            <input class="form-control form-control-sm AdSoyadS" type="text" value="{{makbuz.AdSoyad}}"
+                                placeholder="{{makbuz.AdSoyad}}">
+                            <code>Yazıcıda Görünmez </code>
+                        </div>
+                    </div>
+                </div>
+
+
+            </div>
+
+
+            <div class="row">
+                <div class="col-sm-12 mb-6">
+                    <strong class="printFont">Yalnız:(yazı ile)
+                        &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+                        &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+                        &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+                        &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+                        &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+                        &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+                        &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+                        &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+                        &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+                        &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+                        &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+                        &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+
+                        TL elden alınmıştır </strong>
+                </div>
+            </div>
+
+
+            <div class="row">
+                <div class="col-sm-12 mb-6">
+                    <strong class="printFont">Teslim Alan:</strong> <span class="printFont" id="AdSoyadtxt"></span>
+                    <div class="form-group row gizle">
+                        <div class="col-sm-4 gizle">
+                            <input class="form-control form-control-sm" type="text" id="AdSoyad">
+                            <code>Yazıcıda Görünmez - düzenleme alanı </code>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="row">
+                <div class="col-sm-12 mb-6">
+
+                </div>
+            </div>
+
+            <div class="row">
+                <div class="col-sm-12 mb-6">
+
+                </div>
+            </div>
+
+            <div class="row">
+                <div class="col-sm-12 mb-6">
+
+                </div>
+            </div>
+
+            <div class="row">
+                <div class="col-sm-12 mb-6">
+
+                </div>
+            </div>
+
+            <div class="row">
+                <div class="col-sm-12 mb-6">
+
+                </div>
+            </div>
+
+            <div class="row">
+                <div class="col-sm-12 mb-6">
+                    <strong class="printFont">İmza:</strong>
+                </div>
+            </div>
+
+            <div class="row">
+                <div class="col-sm-12 mb-6">
+
+                </div>
+            </div>
+
+        </div>
+
+        <div style="display: none;" class="col-sm-5 Kopya2 ">
+
+            <div class="row ">
+                <div class="col-sm-6 mb-6 ">
+                    <strong class="printFont">Sıra No: {{makbuz.KesimNo}}</strong>
+                </div>
+
+                <div class="col-sm-6 mb-6 ">
+                    <strong class="printFont">No: <span class="Makbuztxt">{{makbuz.Makbuz}}</span></strong>
+
+                </div>
+            </div>
+            <div class="row ">
+                <div class="col-sm-12 mb-4">
+
+                </div>
+
+                <div class="col-sm-12 mb-4">
+                    <strong class="printFont">Tarih: {{tarih}}</strong>
+                </div>
+            </div>
+            <div class="row ">
+                <div class="col-sm-12  text-center">
+
+                </div>
+                <div class="col-sm-12 mb-4">
+                    <strong class="printFont"> Tutar </strong> <span
+                        class="printFont OdemelerVerilenUcrettxt">{{makbuz.OdemelerVerilenUcret|stringformat:"%.2f"}}</span>
+                    TL
+
+                </div>
+                <div class="col-sm-12  text-center">
+
+                </div>
+
+
+                <div class="col-sm-12  text-center">
+
+                </div>
+            </div>
+            <div class="row ">
+                <div class="col-sm-12 mb-4">
+                    <strong class="printFont">Sayın:</strong> <span
+                        class="printFont AdSoyadStxt">{{makbuz.AdSoyad}}</span>
+
+                </div>
+
+
+            </div>
+
+
+            <div class="row ">
+                <div class="col-sm-12 mb-6">
+                    <strong class="printFont">Yalnız:(yazı ile)
+                        &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+                        &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+                        &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+                        &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+                        &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+                        &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+                        &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+                        &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+                        &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+                        &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+                        &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+                        &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+
+                        TL elden alınmıştır </strong>
+                </div>
+            </div>
+
+
+            <div class="row ">
+                <div class="col-sm-12 mb-6">
+                    <strong class="printFont">Teslim Alan:</strong> <span class="printFont" id="AdSoyadtxt"></span>
+
+                </div>
+            </div>
+
+            <div class="row ">
+                <div class="col-sm-12 mb-6">
+
+                </div>
+            </div>
+
+            <div class="row ">
+                <div class="col-sm-12 mb-6">
+
+                </div>
+            </div>
+
+            <div class="row ">
+                <div class="col-sm-12 mb-6">
+
+                </div>
+            </div>
+
+     
+
+            <div class="row ">
+                <div class="col-sm-12 mb-6">
+                    <strong class="printFont">İmza:</strong>
+                </div>
+            </div>
+
+            <div class="row ">
+                <div class="col-sm-12 mb-6">
+
+                </div>
+            </div>
+        </div>
+
+
+
+
+    </div>
+
+
+
+
+
+
+
+
+
+
+
+</div>
+
+
+<div class="card gizle">
+    <div class="card-header">
+        <button type="button" class="btn btn-block btn-danger " id="yazdir2">
+            Yazdır
+        </button>
+    </div>
+</div>
+
+{% endblock %}
+
+{% block jsInline %}
+<!-- <script src="https://cdn.jsdelivr.net/npm/jquery-validation@1.19.2/dist/jquery.validate.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-select/1.13.1/js/bootstrap-select.min.js"></script>
+<script src="https://unpkg.com/emodal@1.2.69/dist/eModal.min.js"></script> -->
+
+<!-- <link href="https://printjs-4de6.kxcdn.com/print.min.css" type="text/css" rel="stylesheet" />
+
+<script src="https://printjs-4de6.kxcdn.com/print.min.js"></script> -->
+
+
+<script>
+    $('#yazdir,#yazdir2').click(function () {
+        Popup($('#printJS-form')[0].outerHTML);
+
+        function Popup(data) {
+            window.print();
+            return true;
+        }
+    });
+
+    $(document).ready(function () {
+        $(".AdSoyad").on("input", function () {
+            // Print entered value in a div box
+            $(".AdSoyadtxt").text($(this).val());
+        });
+
+        $(".AdSoyadS").on("input", function () {
+            // Print entered value in a div box
+            $(".AdSoyadStxt").text($(this).val());
+        });
+
+
+        $(".OdemelerVerilenUcret").on("input", function () {
+            // Print entered value in a div box
+            $(".OdemelerVerilenUcrettxt").text($(this).val());
+        });
+
+        $(".Makbuz").on("input", function () {
+            // Print entered value in a div box
+            $(".Makbuztxt").text($(this).val());
+        });
+    });
+</script>
+{% endblock %}

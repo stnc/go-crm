@@ -1,0 +1,844 @@
+{% extends "../app.html" %}
+{% block content %}
+{% set RootName = 'admin-gruplar' %}
+{% set routerName = 'admin/gruplar' %}
+{% include "../viewComponents/alertMsg.html"%}
+
+
+<div class="row">
+    <!-- <div class="col-4 col-sm-4 col-md-2 mb-3 mb-xl-0">
+        <a class="btn btn-block btn-primary" href="/admin/gruplar/create">Yeni Grup Oluştur</a>
+  </div> -->
+    <div class="col-4 col-sm-4 col-md-2  mb-3 mb-xl-0">
+        <a class="btn btn-block btn-primary" href="/admin/gruplar/createEmpty">Boş Grup Oluştur</a>
+    </div>
+    <div class="col-4 col-sm-4 col-md-2  mb-3 mb-xl-0">
+        <a class="btn btn-block btn-primary" href="/admin/gruplar/hayvanata">Hayvan Atamaları</a>
+    </div>
+
+    <div class="col-4 col-sm-4 col-md-2  mb-3 mb-xl-0">
+        <a class="btn btn-block btn-primary" href="/admin/hayvanBilgisi/create">Kurbanlık Hayvan Ekle</a>
+    </div>
+
+
+    <div class="col-4 col-sm-4 col-md-2  mb-3 mb-xl-0">
+        <a class="btn btn-block btn-primary" href="/admin/hayvanBilgisi">Kurbanlıklar</a>
+    </div>
+
+
+    <div class="col-4 col-sm-4 col-md-2  mb-3 mb-xl-0">
+        <a class="btn btn-block btn-success" href="/admin/gruplar/excel">Excel Çıktısı</a>
+    </div>
+
+</div>
+
+<div class="row">
+    <span>Grup filtreleme</span>
+</div>
+
+<div id="filters" class="buttonIsoTop-group filters-button-group">
+    <button class="buttonIsoTop is-checked" data-filter="*">Tüm Liste</button>
+    <button class="buttonIsoTop" style="background-color: #e55353; color:white" data-filter=".kucuk">Küçük
+        Hisseler</button>
+    <button class="buttonIsoTop" style="background-color: #f9b115; color:white" data-filter=".orta">Orta
+        Hisseler</button>
+    <button class="buttonIsoTop" style="background-color: #2eb85c; color:white" data-filter=".buyuk">Büyük
+        Hisseler</button>
+    {% for grupBilgi in grupBilgileri %}
+    <button class="buttonIsoTop bg-{{grupBilgi.GrupIsoTopeAlert}}"
+        data-filter=".sira{{grupBilgi.KesimSiraNo}}">{{grupBilgi.KesimSiraNo}}</button>
+    {% endfor %}
+</div>
+{% if !grupBilgileri %}
+<div class="col-md-12 flashMsg">
+    <div class="alert alert-success alert-dismissible">
+        <button type="button" class="close" data-dismiss="alert" aria-hidden="true">×</button>
+        <h5><i class="icon fas fa-check"></i> Uyarı!</h5>
+        Grup Bulunamadı
+    </div>
+</div>
+<!-- /.alert -->
+{% endif %}
+
+
+<div id="myList">
+    <div class="card">
+        <div class="card-body">
+            <div class="row">
+                <div class="col-md-3">
+                    <span class="help-block">Kişi Ara</span>
+                    <input class="form-control search" id="text-input" type="text" name="text-input"
+                        placeholder="Kişi Ara">
+
+
+                </div>
+
+
+                <div class="col-md-3">
+                    <button class="CustomClear btn btn-info btn-sm">Aramayı Temizle</button>
+                </div>
+
+                <div class="col-md-3">
+                    <div class="card" style="margin: 0 !important;">
+                        <div class="card-body" style="padding: 10px!important">
+                            <div class="text-value-md moneyFormat">{{toplamOdemeler|stringformat:"%.2f"}}</div>
+                            <div>Tüm Ödemeler Toplamı</div>
+                           
+
+                        </div>
+                    </div>                </div>
+
+                <div class="col-md-3">
+                    <div class="card" style="margin: 0 !important;">
+                        <div class="card-body" style="padding: 10px!important">
+                            <div class="text-value-md moneyFormat">{{toplamBorclar|stringformat:"%.2f"}}</div>
+                            <div>Kalan Borçlar Toplamı</div>
+                           
+
+                        </div>
+                    </div>                </div>
+
+                <table style="margin-top: 15px; display: none;"
+                    class="table table-responsive-sm table-sm table-striped stnc-table">
+                    <thead class="theachShow">
+                        <tr>
+                            <th>Adı Soyadı</th>
+                            <th>Tel</th>
+                            <th>Kesim No</th>
+                            <th>Referans Ad</th>
+                            <th>Referans Tel</th>
+                            <th>Açıklama</th>
+                            <th>İşlemler</th>
+                        </tr>
+                    </thead>
+                    <tbody class="list">
+                        {% for grupBilgi in grupBilgileri %}
+                        {% for kurban in grupBilgi.KurbanKisiList %}
+                        <tr>
+                            <td class="adsoyad">{{kurban.KisiAdSoyad }}</td>
+                            <td class="telefon">{{kurban.KisiTelefon}}</td>
+                            <td class="kesimNo">{{grupBilgi.KesimSiraNo}}</td>
+                            <td class="ref1">{{kurban.ReferansAdSoyad}}</td>
+                            <td class="refTel">{{kurban.ReferansTelefon}}</td>
+                            <td class="goster">
+                                <button class="show btn btn-info btn-sm"
+                                    data-filter=".sira{{grupBilgi.KesimSiraNo}}">Kesim No {{grupBilgi.KesimSiraNo}}
+                                    Grubunu Göster</button>
+
+                                <a href="/admin/kurban/edit/{{kurban.ID}}?action=odemelerList"
+                                    class=" btn btn-warning btn-sm">Ödemelerini Göster</a>
+
+
+                                <a href="/admin/kisiler/edit/{{kurban.KisiID}}" class=" btn btn-danger btn-sm">Kişi
+                                    Bilgileri</a>
+                            </td>
+                        </tr>
+                        {% endfor %}
+                        {% endfor %}
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+
+
+<div class="row grid">
+
+    {% for grupBilgi in grupBilgileri %}
+
+    <div class="col-sm-12 col-xl-12 element-item {{grupBilgi.GrupIsoTopeName}} sira{{grupBilgi.KesimSiraNo}}"
+        data-category="{{grupBilgi.GrupIsoTopeName}} ">
+        <div class="card border-{{grupBilgi.GrupIsoTopeAlert}} bg-{{grupBilgi.GrupIsoTopeAlert}}">
+            {% if grupBilgi.Durum==2 %}
+            <div class="card-header card-header-noAtama text-center ">
+                Bu Gruba Hayvan Atanmamıştır <a href="/admin/gruplar/hayvanata">Hayvan atamak için tıklayın</a>
+            </div>
+            <hr>
+            {% endif %}
+            <div class="card-header">
+                <div class="card-header-bottom">
+                    <span style="padding: 10px;
+                        margin-right: 9px; font-size:15px"
+                        class="badge badge-pill badge-info float-left">{{grupBilgi.KesimSiraNo}} : Kesim No
+
+                    </span>
+
+
+                    <span style="padding: 10px; margin-right: 9px;font-size:18px"
+                        class="badge badge-pill badge-{{grupBilgi.GrupIsoTopeAlert}} float-left">{{grupBilgi.GrupIsoTopeTRname}}
+                    </span>
+
+                    <strong style="padding: 10px; font-size:18px"> Grup Adı:</strong> {{grupBilgi.GrupAdi }} /
+                    <strong>Kurban Fiyatı:
+                    </strong>
+
+                    <span class="myMoney2" style="padding: 10px; margin-right: 9px;font-size:20px">
+                        {{grupBilgi.ToplamKurbanFiyati|stringformat:"%.2f"}}</span> TL
+
+                    <small style="padding: 10px; margin-right: 9px;font-size:20px">Küpe NO: {{grupBilgi.KupeNo}}</small>
+
+
+                    <div class="btn-group float-right">
+                        <button class="btn btn-info dropdown-toggle btn-sm" type="button" data-toggle="dropdown"
+                            aria-haspopup="true" aria-expanded="false">İşlemler
+                        </button>
+                        <div class="dropdown-menu" x-placement="bottom-start"
+                            style="will-change: transform; margin: 0px;">
+                            <a class="dropdown-item" href="/admin/gruplar/edit/{{grupBilgi.ID}}">Grubu Düzenle</a>
+                            {% if grupBilgi.HayvanBilgisiID!=0 %}
+                            <a class="dropdown-item"
+                                href="/admin/hayvanBilgisi/edit/{{grupBilgi.HayvanBilgisiID}}">Hayvanı Düzenle</a>
+                            {% endif %}
+                        </div>
+
+                    </div>
+
+                </div>
+
+                <div class="card-header-actions">
+                    <a class="card-header-action btn-setting" href="#">
+                        <svg class="c-icon">
+                            <use xlink:href="assets/vendors/@coreui/icons/svg/free.svg#cil-settings">
+                            </use>
+                        </svg></a>
+                </div>
+
+
+            </div>
+
+            <div class="card-body ">
+                <div class="accordion" id="accordion{{grupBilgi.ID}}" role="tablist">
+                    <div class="card mb-0">
+                        <div class="card-header" id="headingOne{{grupBilgi.ID}}" role="tab">
+                            <h5 class="mb-0">
+                                <a data-toggle="collapse" href="#collapseOne{{grupBilgi.ID}}" aria-expanded="true"
+                                    aria-controls="collapseOne{{grupBilgi.ID}}">
+                                    <span style="color: crimson;">Kesim Sıra No: </span>
+                                    <span class="myMoney"> {{grupBilgi.KesimSiraNo }} </span>
+                                    <span style="color: crimson;"> / Hisse Fiyatı: </span>
+                                    <span class="myMoney"> {{grupBilgi.KisiBasiDusenHisseFiyati|stringformat:"%.2f" }}
+                                    </span> TL /
+                                    <span style="color: crimson;">Toplam Ağırlık :</span>
+                                    {{grupBilgi.Agirlik}} KG /
+                                    <!-- <span style="color: crimson;">Kişi Başı Düşen Tahmini Kilo: </span>
+                                    {{grupBilgi.Agirlik / grupBilgi.HissedarAdet}} KG  -->
+                                </a>
+                            </h5>
+                        </div>
+
+
+
+                        <div class="collapse show" id="collapseOne{{grupBilgi.ID}}" role="tabpanel"
+                            aria-labelledby="headingOne{{grupBilgi.ID}}" data-parent="#accordion{{grupBilgi.ID}}">
+                            <div class="card-body">
+                                <div class="row">
+                                    <div class="col-md-12">
+                                        <table
+                                            class="table table-hover table-responsive-sm table-bordered table-striped table-sm">
+                                            <thead>
+                                                <tr>
+                                                    <th class="text-center">No</th>
+                                                    <th>Adı Soyadı</th>
+                                                    <th>Toplam Ödeme</th>
+                                                    <th>Kalan Borç</th>
+                                                    <th>Referans </th>
+                                                    <th>Vekalet</th>
+                                                    <th>Açıklama</th>
+                                                    <th>İşlemler</th>
+
+                                                </tr>
+                                            </thead>
+                                            <tbody>
+                                                {% for kurban in grupBilgi.KurbanKisiList %}
+
+
+
+                                                {% if kurban.KisiID!=1 %}
+                                                <tr>
+                                                    <td class="text-center">
+                                                        <strong class="text-center">{{forloop.Counter}}</strong>
+                                                    </td>
+                                                    <td>
+                                                        <!-- <a target="_blank" href="https://wa.me/90{{kurban.Telefon }}?text=Test">WhatsApp</a> -->
+                                                        <div>
+                                                            <strong>{{kurban.KisiAdSoyad}}</strong>
+                                                        </div>
+                                                        <div class="small text-muted">
+                                                            <span>Tel</span> | {{kurban.KisiTelefon }}
+                                                        </div>
+                                                        {% if kurban.GrupLideri==0 %}
+                                                        <div><strong style="color: brown;">Grup Lideri
+                                                            </strong></div>
+                                                        {% endif %}
+                                                    </td>
+
+                                                    {% if kurban.BorcDurum!=3 %}
+                                                    <td>
+                                                        <strong class="myMoney2">
+                                                            {{kurban.Bakiye|stringformat:"%.2f"}}</strong>
+                                                        <small>TL</small>
+                                                    </td>
+                                                    {% endif %}
+
+                                                    {% if kurban.BorcDurum!=3 %}
+                                                    <td>
+                                                        <strong class="myMoney3">
+                                                            {{kurban.Alacak|stringformat:"%.2f"}}</strong>
+                                                        <small>TL</small>
+
+
+                                                        {% if kurban.BorcDurum==6 %}
+                                                        <small style="padding: 5px;" class="alert alert-danger">Ödeme
+                                                            Tamamlandı</small>
+                                                        {% endif %}
+
+                                                    </td>
+                                                    {% endif %}
+
+
+                                                    {% if kurban.BorcDurum==3 %}
+                                                    <td>
+                                                        <small style="padding: 5px;" class="alert alert-danger">Kasamız
+                                                            Borçlu Durumda</small>
+                                                        <br>
+                                                        <br>
+                                                        <strong class="myMoney2">
+                                                            {{kurban.Borc|stringformat:"%.2f"}}</strong>
+                                                        <small>TL</small>
+                                                    </td>
+                                                    <td>
+                                                    </td>
+                                                    {% endif %}
+
+                                                    <td>
+                                                        {% if kurban.ReferansAdSoyad!="" %}
+
+                                                        <span>{{kurban.ReferansAdSoyad}}</span><br>
+                                                        <strong> TEL:</strong>
+                                                        <small>{{kurban.ReferansTelefon }} </small>
+
+                                                        {% endif %}
+
+
+
+                                                    </td>
+
+                                                    <td>
+                                                        {% if kurban.VekaletDurumu==1 %}
+                                                        <span class="badge badge-warning" id="vm{{kurban.ID}}"> Vekalet Alınmamış</span>
+                                                        <br>
+                                                        <button id="vmtxt{{kurban.ID}}"  data-id="{{kurban.ID}}" data-durum="alindi"
+                                                            class="btn btn-sm btn-primary vekaletModal ">Alındı Olarak
+                                                            İşaretle</button>
+                                                        {% else %}
+                                                        <span class="badge badge-success" id="vm{{kurban.ID}}"> Vekalet Alınmış</span>
+                                                        <br>
+                                                        <button id="vmtxt{{kurban.ID}}"  data-id="{{kurban.ID }}" data-durum="alinmadi"
+                                                            class="btn btn-sm btn-primary vekaletModal">Alınmadı Olarak
+                                                            İşaretle</button>
+                                                        {% endif %}
+                                                    </td>
+
+
+
+                                                    <td>
+
+
+                                                        <small class="kisiAciklamaTxt{{kurban.KisiID}}"> {{kurban.KisiAciklama }}</small>
+                                                        <br>
+                                                        <button data-id="{{kurban.KisiID}}" data-adi="{{kurban.KisiAdSoyad}}"
+                                                        class="btn btn-sm btn-secondary kisiAciklamaKaydetBtn">Ekle</button>
+
+                                                    </td>
+                                                    <td>
+                                                        <div class="btn-group">
+                                                            <button class="btn btn-info dropdown-toggle btn-sm"
+                                                                type="button" data-toggle="dropdown"
+                                                                aria-haspopup="true" aria-expanded="false">İşlemler
+                                                            </button>
+                                                            <div class="dropdown-menu" x-placement="bottom-start"
+                                                                style="will-change: transform; margin: 0px;">
+
+                                                                <a class="dropdown-item"
+                                                                    href="/admin/kurban/edit/{{kurban.ID}}">
+                                                                    Aynı Sayfada Düzenle</a>
+
+                                                                <a class="dropdown-item" target="_blank"
+                                                                    href="/admin/kurban/edit/{{kurban.ID}}">
+                                                                    Yeni Sayfada Düzenle</a>
+
+
+
+                                                                <a class="dropdown-item"
+                                                                    href="/admin/kisiler/edit/{{kurban.KisiID}}">Kişi
+                                                                    Bilgilerine Git </a>
+
+
+                                                                <a class="dropdown-item"
+                                                                    href="/admin/kurban/edit/{{kurban.ID}}?action=odemelerList">Ödemeler</a>
+
+
+                                                                <a class="dropdown-item"
+                                                                    href="/admin/kurban/grupLideri/{{kurban.ID}}?grupID={{kurban.GrupID}}">Grup
+                                                                    Lideri Yap</a>
+                                                                <!-- 
+                                                                <a class="dropdown-item"
+                                                                    href="/admin/gruplar/edit/{{kurban.GrupID}}">Grubunu
+                                                                    Düzenle</a>       -->
+
+                                                            </div>
+                                                        
+                                                      
+                                                 
+                                                        
+                                                        </div>
+                                                        <a class="btn btn-danger btn-sm"
+                                                        href="/admin/kurban/edit/{{kurban.ID}}?action=odemelerList">Ödeme</a>
+                                                        {% if grupBilgi.Durum!=2 %}
+                                                 
+
+                                                        <div class="btn-group">
+                                                            <button class="btn btn-success btn-sm dropdown-toggle" type="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">WhatsApp</button>
+                                                            <div class="dropdown-menu" style="margin: 0px;">
+                                                                <a class="dropdown-item" target="_blank" href="{{msg.Wp(kurban.Slug)}}">Kurban Bilgisi</a>
+                                                                <a class="dropdown-item" target="_blank" href="{{msg.Wp2(kurban.Slug)}}">Konum Gönder</a>
+                                                                <a class="dropdown-item" target="_blank" href="{{msg.Wp3(kurban.Slug)}}">Ek Mesaj</a>
+                                            
+                                                            </div>
+                                                            </div>
+
+
+                                                    {% endif %}
+                                                    </td>
+                                                </tr>
+
+                                                {% else %}
+                                                <tr>
+                                                    <td class="text-center">
+                                                        <strong class="text-center">{{forloop.Counter}}</strong>
+                                                    </td>
+                                                    <td colspan="6">
+                                                        <div style="padding:5px" class="alert alert-danger"
+                                                            role="alert">
+                                                            Kişi Atanmamıştır <a
+                                                                href="/admin/kurban/edit/{{kurban.ID}}">atamak
+                                                                için tıklayınız</a></div>
+                                                    </td>
+
+                                                    <td>
+
+                                                        <div class="btn-group">
+                                                            <button class="btn btn-info btn-sm dropdown-toggle"
+                                                                type="button" data-toggle="dropdown"
+                                                                aria-haspopup="true" aria-expanded="false">İşlemler
+                                                            </button>
+                                                            <div class="dropdown-menu" x-placement="bottom-start"
+                                                                style="will-change: transform; margin: 0px;">
+
+
+                                                                <a class="dropdown-item" target="_blank"
+                                                                    href="/admin/kurban/edit/{{kurban.ID}}">Yeni
+                                                                    Sayfada Düzenle</a>
+
+
+                                                                <a class="dropdown-item"
+                                                                    href="/admin/kurban/edit/{{kurban.ID}}">Aynı
+                                                                    Sayfada Düzenle</a>
+
+
+
+                                                                <a class="dropdown-item"
+                                                                    href="/admin/kurban/edit/{{kurban.ID}}?action=odemelerList">Ödemelerini
+                                                                    Göster</a>
+
+
+                                                                <!-- <a class="dropdown-item"
+                                                                    href="/admin/gruplar/edit/{{kurban.GrupID}}">Grubunu
+                                                                    Düzenle</a> -->
+                                                            </div>
+
+                                                            <span>|</span>
+                                                            <a class="btn btn-danger btn-sm"
+                                                                href="/admin/kurban/edit/{{kurban.ID}}?action=odemelerList">Ödeme</a>
+
+                                                        </div>
+
+                                                    </td>
+
+                                                </tr>
+                                                {% endif%}
+                                                {% endfor %}
+
+                                            </tbody>
+                                        </table>
+
+                                        <div class="card-body" style="padding: 0 !important;
+                                        margin: 0 !important;">
+                                            <div class="row">
+                                                <div class="col-sm-4 col-lg-4 col-md-4">
+                                                    <div class="card" style="margin: 0 !important;">
+                                                        <div class="card-body" style="padding: 10px!important">
+                                                            <div class="text-value-md moneyFormat">
+                                                                {{grupBilgi.ToplamOdemeler|stringformat:"%.2f" }}TL
+                                                            </div>
+                                                            <div>Toplam Ödemeler</div>
+                                                           
+            
+                                                        </div>
+                                                    </div>
+                                                </div>
+            
+                                                <div class="col-sm-4 col-lg-4 col-md-4">
+                                                    <div class="card" style="margin: 0 !important;">
+                                                        <div class="card-body" style="padding: 10px!important">
+                                                            <div class="text-value-md moneyFormat">
+                                                                {{grupBilgi.KalanBorclar|stringformat:"%.2f"}}TL
+                                                            </div>
+                                                            <div>Kalan Borçlar Toplamı</div>
+                                                      
+                                                        </div>
+                                                    </div>
+                                                </div>
+            
+            
+                                                <div class="col-sm-4 col-lg-4 col-md-4">
+                                                    <div class="card" style="margin: 0 !important;">
+                                                        <div class="card-body" style="padding: 10px!important">
+                                                            <div class="text-value-md">
+                                                                {{grupBilgi.KasaBorcu|stringformat:"%.2f" }} TL
+                                                            </div>
+                                                            <div>Bizim Borcumuz</div>
+                                                        
+            
+                                                        </div>
+                                                    </div>
+                                                </div>
+            
+                                            </div>
+            
+                                        </div>
+                                    </div>
+
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+
+
+                </div>
+            </div>
+        </div>
+    </div>
+    {% endfor %}
+
+</div>
+
+
+
+
+
+
+<!-- Modal -->
+<div class="modal fade" id="vekaletModal" tabindex="-1" role="dialog" aria-labelledby="vekaletModalLabel"
+    aria-hidden="true">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="vekaletModalLabel">Onaylama</h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body">
+                ...
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-dismiss="modal">Kapat</button>
+                <a href="" data-status="" data-id="" class="btn btn-primary">Evet Onaylıyorum</a>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+
+<div class="modal fade" id="aciklamaModal" tabindex="-1" role="dialog" aria-labelledby="aciklamaModalLabel"
+    aria-hidden="true">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="aciklamaModalLabel"></h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body" id="modalAciklama">
+                <div class="form-group">
+                    <label for="Aciklama">NOT
+                            </label>
+                    <textarea class="form-control " id="Aciklama" name="Aciklama" rows="9" placeholder="Kısa Açıklama..."></textarea>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-dismiss="modal">Vazgeç</button>
+                <a data-id="" class="btn btn-success">Kaydet</a>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+{% endblock %}
+
+
+{% block jsInline %}
+
+<script src="/assets/admin/js/tooltips.js"></script>
+<script src="/assets/admin/js/jquery.mask.min.js"></script>
+<!-- <script src="https://unpkg.com/isotope-layout@3/dist/isotope.pkgd.min.js"></script> -->
+<script src="/assets/admin/js/isotope.pkgd.min.js"></script>
+<script src="/assets/admin/js/list.min.js"></script>
+<!-- <script src="https://cdnjs.cloudflare.com/ajax/libs/list.js/1.5.0/list.min.js"></script> -->
+
+<script>
+    //-------------------vekalat onayı ---------
+    $('.vekaletModal').click(function () {
+        let idAdres = $(this).data('id');
+        var durum = $(this).data('durum');
+        $('#vekaletModal').modal('show');
+        $('#vekaletModal .modal-footer a').data("id", idAdres)
+        if (durum == "alindi") {
+            $('#vekaletModal .modal-footer a').data("status", 2);
+            $('#vekaletModal .modal-footer a').attr('href', '/admin/kurban/vekaletDurumu/' + idAdres + '?status=2');
+            $('#vekaletModal .modal-body').text("Kurbanınızı almaya aldırmaya kesmeye kestirmeye hisselendirmeye beni/bizi vekil tayin ediyor musunuz?");
+        } else {
+            $('#vekaletModal .modal-footer a').data("status", 1);
+            $('#vekaletModal .modal-footer a').attr('href', '/admin/kurban/vekaletDurumu/' + idAdres + '?status=1');
+            $('#vekaletModal .modal-body').text("Vekalet alınmadı olarak düzeltmek istiyormusunuz");
+        }
+    });
+
+
+    $('.kisiAciklamaKaydetBtn').click(function () {
+        let id = $(this).data('id');
+        let adiSoyadi = $(this).data('adi');
+        $.ajax({
+            type: 'GET',
+            url: "/admin/kisiler/kisiAciklama/"+id,
+            success: function (data) {
+                $('#aciklamaModal').modal('show');
+                $('#aciklamaModal #modalAciklama #Aciklama').empty();
+                $('#aciklamaModal #modalAciklama #Aciklama').val(data.aciklama);
+                $('#aciklamaModal .modal-footer a').data("id", id);
+                $('#aciklamaModal #aciklamaModalLabel').text( adiSoyadi+ " açıklama değişikliği");
+            },
+            error: function (data) {
+                console.log('An error occurred.');
+                console.log(data);
+            },
+        });
+    });
+
+
+    
+    $('#aciklamaModal .modal-footer a').click(function () {
+        let id = $(this).data('id');
+        let aciklama = $('#aciklamaModal #modalAciklama #Aciklama').val()
+        $.ajax({
+            type: 'GET',
+            url: "/admin/kisiler/kisiAciklamaEdit/"+id,
+            data: { aciklama: aciklama,id: id, _csrf: '{{ csrf }}'},
+            success: function (data) {
+                $('#aciklamaModal').modal('hide');
+             //   $('#aciklamaModal #modalAciklama #Aciklama').val(data.aciklama);
+             $('.kisiAciklamaTxt'+id).text(aciklama);
+                $('#aciklamaModal .modal-footer a').data("id", id);
+
+
+                
+            toastr.options = {
+                "closeButton": true,
+                "debug": false,
+                "newestOnTop": false,
+                "progressBar": true,
+                "positionClass": "toast-top-right",
+                "preventDuplicates": false,
+                "onclick": null,
+                "showDuration": "300",
+                "hideDuration": "1000",
+                "timeOut": "4000",
+                "extendedTimeOut": "1000",
+                "showEasing": "swing",
+                "hideEasing": "linear",
+                "showMethod": "fadeIn",
+                "hideMethod": "fadeOut"
+              }
+              toastr["success"]("Açıklama Başarı ile kaydedildi ")
+
+
+            },
+
+
+            error: function (data) {
+                console.log('An error occurred.');
+                console.log(data);
+            },
+        });
+    });
+
+
+
+    $('#vekaletModal .btn-primary').on('click', function (e) {
+        e.preventDefault();
+    //   id="vm{{kurban.ID}}"
+    id= $(this).data('id');
+    status= $(this).data('status');
+        $.ajax({
+            type: 'GET',
+            url: $(this).attr('href'),
+            
+            success: function (data) {
+                if (data == "ok") {
+                   if (status==2){  
+                    $("#vmtxt"+id).data("durum","alinmadi");
+                        $("#vmtxt"+id).text('Alınmadı Olarak İşaretle');
+                        $("#vm"+id).text('Vekalet Alınmış');
+                        $("#vm"+id).removeClass( "badge-warning" )
+                        $("#vm"+id).addClass( "badge-success" )
+                        $('#vekaletModal').modal('hide');
+                    } 
+                     if (status==1){  
+                       
+                        $("#vmtxt"+id).data("durum","alindi");
+                        $("#vm"+id).text('Vekalet Alınmamış');
+                        $("#vmtxt"+id).text('Alındı Olarak İşaretle');
+                      
+                        $("#vm"+id).addClass( "badge-warning" )
+                        $("#vm"+id).removeClass( "badge-success" );
+                        $('#vekaletModal').modal('hide');
+                   }
+                }
+            },
+            error: function (data) {
+                console.log('An error occurred.');
+                console.log(data);
+            },
+        });
+    });
+
+
+    $(function () { //shorthand document.ready function
+
+        $('.moneyFormat').mask('#.##0,00', { reverse: true });
+    });
+
+    // init Isotope
+    var $grid = $('.grid').isotope({
+        itemSelector: '.element-item',
+        layoutMode: 'fitRows',
+
+    });
+
+    var options = {
+        valueNames: ['adsoyad', 'telefon', 'ref1', 'refTel']
+    };
+
+    var myList = new List('myList', options);
+
+    var noItems = $('<div class="item" id="no-items-found">Aradığınız kişi bulunamadı</div>');
+
+    myList.on('updated', function (list) {
+        if (list.matchingItems.length == 0) {
+            $(list.list).append(noItems);
+            $('.theachShow').hide();
+
+        } else {
+            noItems.detach();
+            var filterValue = "*";
+            // use filterFn if matches value
+            filterValue = filterValue;
+            $grid.isotope({ filter: filterValue });
+            $('.theachShow').show();
+            $('.stnc-table').show();
+
+        }
+    });
+
+    myList.on('searchComplete', function (list) {
+        if ($('input.search').val() == '') {
+            list.visibleItems.forEach(i => i.hide())
+            $('.theachShow').hide();
+        }
+    }).trigger('searchComplete')
+
+    // setTimeout(function () {
+    //     $('input.search').focus();
+    // }, 250);
+
+
+
+
+
+
+    // bind filter button click
+    $('#myList .list').on('click', 'button', function () {
+        var filterValue = $(this).attr('data-filter');
+        filterValue = filterValue;
+        $grid.isotope({ filter: filterValue });
+    });
+
+    $('.CustomClear').on('click', function () {
+        var filterValue = "*";
+        filterValue = filterValue;
+        $grid.isotope({ filter: filterValue });
+        $("#myList input.search").val("");
+        myList.on('searchComplete', function (list) {
+            if ($('input.search').val() == '') {
+                list.visibleItems.forEach(i => i.hide())
+            }
+        }).trigger('searchComplete')
+        $('.theachShow').hide();
+        noItems.detach();
+    });
+
+    // bind filter button click
+    $('#filters').on('click', 'button', function () {
+        var filterValue = $(this).attr('data-filter');
+        // use filterFn if matches value
+        filterValue = filterValue;
+        $grid.isotope({ filter: filterValue });
+    });
+
+    // change is-checked class on buttons
+    $('.buttonIsoTop-group').each(function (i, buttonGroup) {
+        var $buttonGroup = $(buttonGroup);
+        $buttonGroup.on('click', 'button', function () {
+            $buttonGroup.find('.is-checked').removeClass('is-checked');
+            $(this).addClass('is-checked');
+        });
+    });
+
+
+
+
+
+
+                    //   sayi = $(".myMoney").html();
+                    //  sayi = formatMyMoney(sayi);
+                    //   $(".myMoney").html(sayi);
+    /*
+        var numbers = [45, 4, 9, 16, 25];
+        numbers.forEach(myFunction);
+
+        function myFunction(value, index, array) {
+            sayi = $(".myMoney").html();
+            sayi = formatMyMoney(sayi);
+            $(".myMoney").html(sayi);
+        }
+    */
+</script>
+{% endblock %}
